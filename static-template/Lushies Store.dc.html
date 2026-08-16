@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#FFF7FA;font-family:'Jost',system-ui,sans-serif;color:#6E3048;-webkit-font-smoothing:antialiased}
+a{color:#6E3048;text-decoration:none}
+a:hover{color:#E39BB2}
+button{font-family:inherit;cursor:pointer}
+::-webkit-scrollbar{height:6px;width:6px}
+::-webkit-scrollbar-thumb{background:#F3D6DF;border-radius:3px}
+@keyframes lsFade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes lsSlideIn{from{transform:translateX(100%)}to{transform:none}}
+@keyframes lsPulse{0%,100%{opacity:1}50%{opacity:.45}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#FFF7FA">
+
+  <div style="height:38px;background:#6E3048;color:#FFF7FA;display:flex;align-items:center;justify-content:center;gap:10px;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:300">
+    <button onClick="{{ prevAnnounce }}" style="background:none;border:none;color:#FFF7FA;opacity:.5;font-size:13px;padding:0 6px">&#8249;</button>
+    <span style="min-width:460px;text-align:center">{{ announce }}</span>
+    <button onClick="{{ nextAnnounce }}" style="background:none;border:none;color:#FFF7FA;opacity:.5;font-size:13px;padding:0 6px">&#8250;</button>
+  </div>
+
+  <header style="position:sticky;top:0;z-index:60;background:#FFF7FA;border-bottom:1px solid #F7E0E7">
+    <div style="max-width:1600px;margin:0 auto;padding:0 40px;height:78px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center">
+      <div style="display:flex;align-items:center;gap:22px;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#9B6C7E">
+        <span style="display:inline-flex;align-items:center;gap:7px"><span style="width:19px;height:19px;border:1px solid #6E3048;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;color:#6E3048">$</span>US</span>
+        <span>Search</span>
+      </div>
+      <a href="#" onClick="{{ goHome }}" style="text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:30px;letter-spacing:.3em;text-transform:uppercase;line-height:1">Lushies</div>
+        <div style="font-size:8.5px;letter-spacing:.42em;text-transform:uppercase;color:#C69CAC;margin-top:5px">Colour · Paris</div>
+      </a>
+      <div style="display:flex;align-items:center;justify-content:flex-end;gap:24px;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#9B6C7E">
+        <span>Account</span>
+        <span>Wishlist</span>
+        <button onClick="{{ openCart }}" style="background:none;border:none;font:inherit;letter-spacing:.14em;text-transform:uppercase;color:#6E3048;display:inline-flex;align-items:center;gap:7px;padding:0">Bag
+          <span style="min-width:19px;height:19px;padding:0 5px;border-radius:10px;background:#6E3048;color:#FFF7FA;font-size:10px;display:inline-flex;align-items:center;justify-content:center;letter-spacing:0">{{ cartCount }}</span>
+        </button>
+      </div>
+    </div>
+
+    <nav onMouseLeave="{{ closeMega }}" style="border-top:1px solid #FDEFF3;position:relative">
+      <ul style="max-width:1600px;margin:0 auto;padding:0 40px;height:48px;display:flex;align-items:center;justify-content:center;gap:38px;list-style:none">
+        <li style="font-size:12px;letter-spacing:.2em;text-transform:uppercase"><a href="#" onClick="{{ goCollection }}">New</a></li>
+        <li onMouseEnter="{{ openMega }}" style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;border-bottom:1px solid #6E3048;padding:14px 0 13px"><a href="#" onClick="{{ goCollection }}">Lips</a></li>
+        <li style="font-size:12px;letter-spacing:.2em;text-transform:uppercase"><a href="#" onClick="{{ goCollection }}">Eyes</a></li>
+        <li style="font-size:12px;letter-spacing:.2em;text-transform:uppercase"><a href="#" onClick="{{ goCollection }}">Face</a></li>
+        <li style="font-size:12px;letter-spacing:.2em;text-transform:uppercase"><a href="#" onClick="{{ goCollection }}">Fragrance</a></li>
+        <li style="font-size:12px;letter-spacing:.2em;text-transform:uppercase"><a href="#" onClick="{{ goCollection }}">Sets</a></li>
+        <li style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#D4547C"><a href="#" onClick="{{ goCollection }}" style="color:#D4547C">Sale</a></li>
+      </ul>
+
+      <sc-if value="{{ megaOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;left:0;right:0;top:100%;background:#FFF7FA;border-top:1px solid #FDEFF3;border-bottom:1px solid #F7E0E7;box-shadow:0 22px 40px -24px rgba(110,48,72,.28);animation:lsFade .22s ease both;z-index:70">
+          <div style="max-width:1600px;margin:0 auto;padding:34px 40px 40px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) 1.4fr;gap:36px">
+            <div>
+              <div style="aspect-ratio:4/3;background:linear-gradient(150deg,#FDEDF2,#F7D6E0);display:flex;align-items:flex-end;padding:12px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#B57A90">Image · new</div>
+              <h4 style="font-family:'Playfair Display',serif;font-size:17px;font-weight:500;margin:14px 0 10px">New Arrivals</h4>
+              <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;font-size:13px;color:#8F5E70;font-weight:300">
+                <li><a href="#" onClick="{{ goCollection }}">Velvet Blur Lip</a></li>
+                <li><a href="#" onClick="{{ goCollection }}">Lacquer Gloss</a></li>
+                <li><a href="#" onClick="{{ goCollection }}">Silk Liner</a></li>
+              </ul>
+            </div>
+            <div>
+              <div style="aspect-ratio:4/3;background:linear-gradient(150deg,#FBE1E9,#EEB9C9);display:flex;align-items:flex-end;padding:12px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#B57A90">Image · best sellers</div>
+              <h4 style="font-family:'Playfair Display',serif;font-size:17px;font-weight:500;margin:14px 0 10px">Best Sellers</h4>
+              <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;font-size:13px;color:#8F5E70;font-weight:300">
+                <li><a href="#" onClick="{{ goPdp }}">Matte Lip Couture</a></li>
+                <li><a href="#" onClick="{{ goCollection }}">Lip Duo Set</a></li>
+                <li><a href="#" onClick="{{ goCollection }}">Cashmere Balm</a></li>
+              </ul>
+            </div>
+            <div>
+              <div style="aspect-ratio:4/3;background:linear-gradient(150deg,#FBECF1,#EFCBD8);display:flex;align-items:flex-end;padding:12px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#A9758A">Image · lips</div>
+              <h4 style="font-family:'Playfair Display',serif;font-size:17px;font-weight:500;margin:14px 0 10px">By Finish</h4>
+              <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;font-size:13px;color:#8F5E70;font-weight:300">
+                <li><a href="#" onClick="{{ goCollection }}">Matte</a></li>
+                <li><a href="#" onClick="{{ goCollection }}">Satin</a></li>
+                <li><a href="#" onClick="{{ goCollection }}">High Shine</a></li>
+                <li><a href="#" onClick="{{ goCollection }}">Sheer Tint</a></li>
+              </ul>
+            </div>
+            <div>
+              <div style="aspect-ratio:4/3;background:linear-gradient(150deg,#8A5A6E,#A06B80);display:flex;align-items:flex-end;padding:12px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#FBE1E9">Image · sets</div>
+              <h4 style="font-family:'Playfair Display',serif;font-size:17px;font-weight:500;margin:14px 0 10px">Gifting</h4>
+              <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;font-size:13px;color:#8F5E70;font-weight:300">
+                <li><a href="#" onClick="{{ goCollection }}">The Lip Wardrobe</a></li>
+                <li><a href="#" onClick="{{ goCollection }}">Discovery Set</a></li>
+                <li><a href="#" onClick="{{ goCollection }}">Gift Cards</a></li>
+              </ul>
+            </div>
+            <div style="position:relative;background:linear-gradient(160deg,#F3C4D1,#D68FA6);min-height:250px;display:flex;flex-direction:column;justify-content:flex-end;padding:26px">
+              <span style="font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.72)">Campaign image</span>
+              <div style="font-family:'Playfair Display',serif;font-size:30px;color:#FFF;line-height:1.1;margin-top:8px">Nocturne<br>Collection</div>
+              <a href="#" onClick="{{ goCollection }}" style="margin-top:16px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#FFF;border-bottom:1px solid rgba(255,255,255,.6);align-self:flex-start;padding-bottom:3px">Discover</a>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </nav>
+  </header>
+
+  <!-- ===================== HOME ===================== -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <main>
+    <div style="max-width:1600px;margin:0 auto;padding:18px 40px 0;display:flex;align-items:center;gap:10px">
+      <span style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#C69CAC">Hero direction</span>
+      <button onClick="{{ setHeroA }}" style="{{ heroBtnA }}">1a Full-bleed</button>
+      <button onClick="{{ setHeroB }}" style="{{ heroBtnB }}">1b Editorial split</button>
+      <button onClick="{{ setHeroC }}" style="{{ heroBtnC }}">1c Type-led triptych</button>
+    </div>
+
+    <sc-if value="{{ heroA }}" hint-placeholder-val="{{ true }}">
+      <section style="position:relative;height:660px;margin:18px 0 0;overflow:hidden">
+        <div style="{{ slideBg }}"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,16,13,.05),rgba(20,16,13,.55))"></div>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#FFF;padding:0 24px">
+          <span style="font-size:11px;letter-spacing:.32em;text-transform:uppercase;opacity:.85">{{ slideEyebrow }}</span>
+          <h1 style="font-family:'Playfair Display',serif;font-weight:400;font-size:76px;line-height:1.02;margin:18px 0 0;max-width:16ch">{{ slideTitle }}</h1>
+          <p style="font-weight:300;font-size:15.5px;line-height:1.7;max-width:46ch;margin:20px 0 0;opacity:.9">{{ slideBody }}</p>
+          <a href="#" onClick="{{ goPdp }}" style="margin-top:30px;background:#FFF7FA;color:#6E3048;padding:16px 42px;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase">Shop the drop</a>
+        </div>
+        <div style="position:absolute;bottom:30px;left:0;right:0;display:flex;justify-content:center;gap:9px">
+          <button onClick="{{ setSlide0 }}" style="{{ dot0 }}"></button>
+          <button onClick="{{ setSlide1 }}" style="{{ dot1 }}"></button>
+          <button onClick="{{ setSlide2 }}" style="{{ dot2 }}"></button>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ heroB }}" hint-placeholder-val="{{ false }}">
+      <section style="display:grid;grid-template-columns:1fr 1.15fr;min-height:660px;margin-top:18px;background:#FDEFF3">
+        <div style="display:flex;flex-direction:column;justify-content:center;padding:0 8vw">
+          <span style="font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:#E39BB2">The Nocturne Edit</span>
+          <h1 style="font-family:'Playfair Display',serif;font-weight:400;font-size:68px;line-height:1.04;margin:20px 0 0">Colour that<br><i>keeps its</i><br>composure.</h1>
+          <p style="font-weight:300;font-size:15.5px;line-height:1.8;color:#8F5E70;max-width:38ch;margin:24px 0 0">Twelve hours of transfer-resistant pigment in a weightless velvet film. Refillable brass case, made in France.</p>
+          <div style="display:flex;gap:14px;margin-top:32px">
+            <a href="#" onClick="{{ goPdp }}" style="background:#6E3048;color:#FFF7FA;padding:16px 38px;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase">Shop now</a>
+            <a href="#" onClick="{{ goCollection }}" style="border:1px solid #6E3048;padding:16px 38px;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase">View collection</a>
+          </div>
+        </div>
+        <div style="background:linear-gradient(150deg,#F8CFDA,#C97F98);display:flex;align-items:flex-end;padding:28px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.72)">Campaign image · 4:5 portrait</div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ heroC }}" hint-placeholder-val="{{ false }}">
+      <section style="margin-top:18px;background:#6E3048;color:#FFF7FA;padding:64px 40px 72px">
+        <div style="max-width:1600px;margin:0 auto">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:30px">
+            <span style="font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:#E39BB2">Autumn / Winter</span>
+            <span style="font-size:11px;letter-spacing:.32em;text-transform:uppercase;opacity:.55">Three finishes · one wardrobe</span>
+          </div>
+          <h1 style="font-family:'Playfair Display',serif;font-weight:400;font-size:132px;line-height:.92;letter-spacing:-.02em;margin:22px 0 34px">NOCTURNE</h1>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+            <div style="aspect-ratio:3/4;background:linear-gradient(160deg,#7C1F2B,#3D0F17);display:flex;align-items:flex-end;padding:22px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.7)">Matte</div>
+            <div style="aspect-ratio:3/4;background:linear-gradient(160deg,#F3C4D1,#7A5A45);display:flex;align-items:flex-end;padding:22px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.75)">Satin</div>
+            <div style="aspect-ratio:3/4;background:linear-gradient(160deg,#FBE4EB,#E5BDC9);display:flex;align-items:flex-end;padding:22px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.8)">High shine</div>
+          </div>
+          <div style="display:flex;justify-content:center;margin-top:38px">
+            <a href="#" onClick="{{ goCollection }}" style="border:1px solid rgba(253,242,245,.5);color:#FFF7FA;padding:16px 46px;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase">Shop the collection</a>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <section style="border-top:1px solid #F7E0E7;border-bottom:1px solid #F7E0E7;background:#FDF1F5">
+      <div style="max-width:1600px;margin:0 auto;padding:20px 40px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8F5E70;text-align:center">
+        <span>Free shipping over $75</span>
+        <span>4 payments of $12 with Klarna</span>
+        <span>Cruelty-free · Vegan formulas</span>
+        <span>60-day returns, no questions</span>
+      </div>
+    </section>
+
+    <section style="max-width:1600px;margin:0 auto;padding:88px 40px 0">
+      <div style="text-align:center;margin-bottom:38px">
+        <span style="font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:#E39BB2">Collections</span>
+        <h2 style="font-family:'Playfair Display',serif;font-weight:400;font-size:42px;margin:12px 0 0">Shop by category</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px">
+        <sc-for list="{{ categories }}" as="c" hint-placeholder-count="5">
+          <a href="#" onClick="{{ c.go }}" style="display:block">
+            <div style="{{ c.style }}"></div>
+            <div style="margin-top:12px;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;text-align:center">{{ c.name }}</div>
+          </a>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="max-width:1600px;margin:0 auto;padding:88px 40px 0">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:30px">
+        <div>
+          <span style="font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:#E39BB2">Product showcase</span>
+          <h2 style="font-family:'Playfair Display',serif;font-weight:400;font-size:42px;margin:12px 0 0">Best sellers</h2>
+        </div>
+        <a href="#" onClick="{{ goCollection }}" style="font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;border-bottom:1px solid #6E3048;padding-bottom:3px">View all 48</a>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:26px">
+        <sc-for list="{{ featured }}" as="p" hint-placeholder-count="4">
+          <div style="position:relative">
+            <div onClick="{{ p.go }}" style="{{ p.imgStyle }}">
+              <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ true }}">
+                <span style="position:absolute;top:12px;left:12px;background:#6E3048;color:#FFF7FA;font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:5px 9px">{{ p.badge }}</span>
+              </sc-if>
+              <button onClick="{{ p.quickAdd }}" style="position:absolute;left:14px;right:14px;bottom:14px;background:rgba(253,242,245,.94);border:none;padding:13px 0;font-size:11px;letter-spacing:.2em;text-transform:uppercase" style-hover="background:#6E3048;color:#FFF7FA">Quick add</button>
+            </div>
+            <div style="margin-top:14px;display:flex;justify-content:space-between;gap:12px;align-items:baseline">
+              <a href="#" onClick="{{ p.go }}" style="font-size:15px;font-weight:400">{{ p.name }}</a>
+              <span style="font-size:14px;color:#8F5E70">{{ p.price }}</span>
+            </div>
+            <div style="font-size:12.5px;color:#B98EA0;font-weight:300;margin-top:4px">{{ p.desc }}</div>
+            <div style="display:flex;align-items:center;gap:7px;margin-top:8px">
+              <span style="color:#E39BB2;font-size:12px;letter-spacing:.1em">{{ p.stars }}</span>
+              <span style="font-size:11.5px;color:#B98EA0">{{ p.reviewLabel }}</span>
+            </div>
+            <div style="display:flex;gap:6px;margin-top:11px">
+              <sc-for list="{{ p.shades }}" as="s" hint-placeholder-count="4">
+                <span style="{{ s.dot }}"></span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="margin-top:96px;position:relative;height:620px;background:linear-gradient(160deg,#8A5A6E,#7A4A5C);display:flex;align-items:center;justify-content:center">
+      <span style="position:absolute;top:26px;left:40px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.45)">Video showcase · 21:9</span>
+      <div style="text-align:center;color:#FFF7FA">
+        <div style="width:78px;height:78px;border:1px solid rgba(253,242,245,.5);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:16px">&#9654;</div>
+        <div style="font-family:'Playfair Display',serif;font-size:40px;margin-top:26px">The making of Nocturne</div>
+        <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;opacity:.6;margin-top:12px">Film · 2:14</div>
+      </div>
+    </section>
+
+    <section style="max-width:1600px;margin:0 auto;padding:88px 40px 0">
+      <div style="display:grid;grid-template-columns:1fr 1fr;background:#FDEFF3">
+        <div style="padding:70px 6vw;display:flex;flex-direction:column;justify-content:center">
+          <span style="font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:#E39BB2">Interactive</span>
+          <h2 style="font-family:'Playfair Display',serif;font-weight:400;font-size:42px;margin:14px 0 0">Find your shade in 30 seconds</h2>
+          <p style="font-weight:300;font-size:15px;line-height:1.8;color:#8F5E70;max-width:40ch;margin:18px 0 0">Three questions — undertone, finish, occasion — and we'll match you to the two shades our clients with your profile keep re-ordering.</p>
+          <button onClick="{{ openQuiz }}" style="margin-top:30px;align-self:flex-start;background:#6E3048;color:#FFF7FA;border:none;padding:16px 40px;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase">Start the shade finder</button>
+          <span style="font-size:11.5px;color:#B98EA0;margin-top:14px">92% of quiz takers keep their match.</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr">
+          <div style="aspect-ratio:1;background:linear-gradient(150deg,#F8CFDA,#D68FA6)"></div>
+          <div style="aspect-ratio:1;background:linear-gradient(150deg,#D089A0,#B36F88)"></div>
+          <div style="aspect-ratio:1;background:linear-gradient(150deg,#FCE8EF,#EDC2CF)"></div>
+          <div style="aspect-ratio:1;background:linear-gradient(150deg,#B78E90,#2A1A18)"></div>
+        </div>
+      </div>
+    </section>
+
+    <section style="max-width:1600px;margin:0 auto;padding:88px 40px 0">
+      <div style="text-align:center;margin-bottom:32px">
+        <span style="font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:#E39BB2">@lushies</span>
+        <h2 style="font-family:'Playfair Display',serif;font-weight:400;font-size:42px;margin:12px 0 0">As worn by you</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px">
+        <div style="aspect-ratio:1;background:linear-gradient(150deg,#FDEDF2,#F8D9E1)"></div>
+        <div style="aspect-ratio:1;background:linear-gradient(150deg,#FBE1E9,#EFC0CE)"></div>
+        <div style="aspect-ratio:1;background:linear-gradient(150deg,#FBECF1,#E9C5D0)"></div>
+        <div style="aspect-ratio:1;background:linear-gradient(150deg,#8A5A6E,#7A4A5C)"></div>
+        <div style="aspect-ratio:1;background:linear-gradient(150deg,#F3C4D1,#D68FA6)"></div>
+        <div style="aspect-ratio:1;background:linear-gradient(150deg,#D089A0,#B36F88)"></div>
+      </div>
+    </section>
+  </main>
+  </sc-if>
+
+  <!-- ===================== COLLECTION ===================== -->
+  <sc-if value="{{ isCollection }}" hint-placeholder-val="{{ false }}">
+  <main>
+    <section style="position:relative;height:300px;background:linear-gradient(150deg,#F3C4D1,#C97F98);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#FFF;text-align:center">
+      <span style="font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;opacity:.8">Collection image cover</span>
+      <h1 style="font-family:'Playfair Display',serif;font-weight:400;font-size:56px;margin:14px 0 0">Lips</h1>
+      <p style="font-weight:300;font-size:14.5px;max-width:52ch;margin:12px 0 0;opacity:.9">Matte, satin and high-shine pigment in refillable brass. 48 shades, 6 finishes.</p>
+    </section>
+
+    <div style="max-width:1600px;margin:0 auto;padding:18px 40px;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:#B98EA0">
+      <a href="#" onClick="{{ goHome }}">Home</a> <span style="opacity:.5">/</span> Lips
+    </div>
+
+    <div style="max-width:1600px;margin:0 auto;padding:0 40px 12px;display:flex;gap:10px;overflow-x:auto">
+      <sc-for list="{{ subCollections }}" as="s" hint-placeholder-count="6">
+        <div style="{{ s.style }}">{{ s.name }}</div>
+      </sc-for>
+    </div>
+
+    <div style="position:sticky;top:126px;z-index:40;background:#FFF7FA;border-top:1px solid #F7E0E7;border-bottom:1px solid #F7E0E7">
+      <div style="max-width:1600px;margin:0 auto;padding:14px 40px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button onClick="{{ openFilters }}" style="display:inline-flex;align-items:center;gap:10px;background:#6E3048;color:#FFF7FA;border:none;padding:10px 20px;font-size:11px;letter-spacing:.18em;text-transform:uppercase">
+            <span style="display:inline-flex;flex-direction:column;gap:2.5px">
+              <span style="display:block;width:13px;height:1px;background:#FFF7FA"></span>
+              <span style="display:block;width:9px;height:1px;background:#FFF7FA"></span>
+              <span style="display:block;width:5px;height:1px;background:#FFF7FA"></span>
+            </span>
+            Filter &amp; sort {{ filterCountLabel }}
+          </button>
+          <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+            <button onClick="{{ f.toggle }}" style="{{ f.style }}">{{ f.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:center;gap:18px;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#8F5E70">
+          <span>{{ resultCount }}</span>
+          <span>Sort: Best selling &#9662;</span>
+        </div>
+      </div>
+    </div>
+
+    <section style="max-width:1600px;margin:0 auto;padding:34px 40px 0;display:grid;grid-template-columns:repeat(4,1fr);gap:26px 26px">
+      <sc-for list="{{ products }}" as="p" hint-placeholder-count="8">
+        <div style="position:relative">
+          <div onClick="{{ p.go }}" style="{{ p.imgStyle }}">
+            <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ true }}">
+              <span style="position:absolute;top:12px;left:12px;background:#6E3048;color:#FFF7FA;font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:5px 9px">{{ p.badge }}</span>
+            </sc-if>
+            <sc-if value="{{ p.lowStock }}" hint-placeholder-val="{{ true }}">
+              <span style="position:absolute;top:12px;right:12px;background:#FFF7FA;color:#D4547C;font-size:9px;letter-spacing:.16em;text-transform:uppercase;padding:5px 9px;animation:lsPulse 2.4s ease-in-out infinite">{{ p.lowStock }}</span>
+            </sc-if>
+            <button onClick="{{ p.quickAdd }}" style="position:absolute;left:14px;right:14px;bottom:14px;background:rgba(253,242,245,.94);border:none;padding:13px 0;font-size:11px;letter-spacing:.2em;text-transform:uppercase" style-hover="background:#6E3048;color:#FFF7FA">Quick add — {{ p.price }}</button>
+          </div>
+          <div style="margin-top:14px;display:flex;justify-content:space-between;gap:12px;align-items:baseline">
+            <a href="#" onClick="{{ p.go }}" style="font-size:15px">{{ p.name }}</a>
+            <span style="font-size:14px;color:#8F5E70">{{ p.price }}</span>
+          </div>
+          <div style="font-size:12.5px;color:#B98EA0;font-weight:300;margin-top:4px">{{ p.desc }}</div>
+          <div style="display:flex;align-items:center;gap:7px;margin-top:8px">
+            <span style="color:#E39BB2;font-size:12px;letter-spacing:.1em">{{ p.stars }}</span>
+            <span style="font-size:11.5px;color:#B98EA0">{{ p.reviewLabel }}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:11px">
+            <sc-for list="{{ p.shades }}" as="s" hint-placeholder-count="4">
+              <button onClick="{{ s.pick }}" style="{{ s.swatch }}"></button>
+            </sc-for>
+            <span style="font-size:11px;color:#B98EA0;margin-left:4px">{{ p.shadeLabel }}</span>
+          </div>
+          <div style="font-size:11.5px;color:#B98EA0;margin-top:8px">or 4 × {{ p.klarna }} with Klarna</div>
+        </div>
+      </sc-for>
+    </section>
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:56px 0 0">
+      <div style="width:220px;height:2px;background:#F7E0E7;position:relative"><span style="position:absolute;left:0;top:0;bottom:0;width:35%;background:#6E3048"></span></div>
+      <span style="font-size:11.5px;color:#B98EA0">Showing 8 of 48</span>
+      <button style="border:1px solid #6E3048;background:none;padding:15px 44px;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase">Load more</button>
+    </div>
+
+    <section style="max-width:1600px;margin:0 auto;padding:80px 40px 0">
+      <div style="background:#FDEFF3;padding:44px 6vw;display:flex;align-items:center;justify-content:space-between;gap:40px">
+        <div>
+          <h3 style="font-family:'Playfair Display',serif;font-weight:400;font-size:30px;margin:0">Not sure which shade?</h3>
+          <p style="font-weight:300;font-size:14.5px;color:#8F5E70;margin:10px 0 0;max-width:52ch">Answer three questions and we'll narrow 48 shades down to two.</p>
+        </div>
+        <button onClick="{{ openQuiz }}" style="background:#6E3048;color:#FFF7FA;border:none;padding:16px 40px;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;white-space:nowrap">Shade finder</button>
+      </div>
+    </section>
+  </main>
+  </sc-if>
+
+  <!-- ===================== PDP ===================== -->
+  <sc-if value="{{ isPdp }}" hint-placeholder-val="{{ false }}">
+  <main>
+    <div style="max-width:1600px;margin:0 auto;padding:20px 40px;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:#B98EA0">
+      <a href="#" onClick="{{ goHome }}">Home</a> <span style="opacity:.5">/</span> <a href="#" onClick="{{ goCollection }}">Lips</a> <span style="opacity:.5">/</span> {{ pdp.name }}
+    </div>
+
+    <section style="max-width:1600px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:76px 1fr 1fr;gap:26px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:10px;position:sticky;top:150px">
+        <sc-for list="{{ gallery }}" as="g" hint-placeholder-count="4">
+          <button onClick="{{ g.pick }}" style="{{ g.style }}"></button>
+        </sc-for>
+      </div>
+      <div style="{{ pdpHero }}"></div>
+
+      <div style="padding:4px 0 0 3vw">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:#E39BB2">Nocturne</span>
+          <span style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:#6E3048;color:#FFF7FA;padding:4px 9px">Best seller</span>
+        </div>
+        <h1 style="font-family:'Playfair Display',serif;font-weight:400;font-size:46px;line-height:1.1;margin:14px 0 0">{{ pdp.name }}</h1>
+        <div style="display:flex;align-items:center;gap:9px;margin-top:12px">
+          <span style="color:#E39BB2;font-size:13px;letter-spacing:.12em">{{ pdp.stars }}</span>
+          <span style="font-size:12.5px;color:#8F5E70;border-bottom:1px solid #EDC3D0">{{ pdp.reviewLabel }}</span>
+          <span style="font-size:12.5px;color:#B98EA0">· 94% would repurchase</span>
+        </div>
+
+        <div style="display:flex;align-items:baseline;gap:12px;margin-top:20px">
+          <span style="font-size:26px">{{ pdp.price }}</span>
+          <span style="font-size:15px;color:#B98EA0;text-decoration:line-through">$42.00</span>
+          <span style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#D4547C">Save 14%</span>
+        </div>
+        <div style="font-size:12.5px;color:#8F5E70;margin-top:6px">or 4 interest-free payments of {{ pdp.klarna }} with <b style="font-weight:500">Klarna</b>. <span style="border-bottom:1px solid #EDC3D0">Learn more</span></div>
+
+        <div style="margin-top:28px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <span style="font-size:11.5px;letter-spacing:.2em;text-transform:uppercase">Shade — <b style="font-weight:500">{{ shadeName }}</b></span>
+            <span style="font-size:11.5px;color:#B98EA0">48 shades</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:9px;margin-top:14px">
+            <sc-for list="{{ pdpShades }}" as="s" hint-placeholder-count="8">
+              <button onClick="{{ s.pick }}" title="{{ s.name }}" style="{{ s.swatch }}"></button>
+            </sc-for>
+          </div>
+          <div style="margin-top:12px;font-size:12.5px;color:#D4547C;display:flex;align-items:center;gap:7px">
+            <span style="width:6px;height:6px;border-radius:50%;background:#D4547C;animation:lsPulse 2s ease-in-out infinite"></span>
+            Only {{ stockLeft }} left in {{ shadeName }} — 18 people have this in their bag
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:26px">
+          <div style="display:flex;align-items:center;border:1px solid #EDC3D0">
+            <button onClick="{{ decQty }}" style="background:none;border:none;width:44px;height:54px;font-size:16px">&#8722;</button>
+            <span style="width:34px;text-align:center;font-size:14px">{{ qty }}</span>
+            <button onClick="{{ incQty }}" style="background:none;border:none;width:44px;height:54px;font-size:16px">+</button>
+          </div>
+          <button onClick="{{ addPdp }}" style="flex:1;background:#6E3048;color:#FFF7FA;border:none;height:54px;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase" style-hover="background:#8A4560">Add to bag — {{ pdpTotal }}</button>
+        </div>
+
+        <div style="margin-top:18px;background:#FDEFF3;padding:16px 18px">
+          <div style="font-size:12.5px;color:#8F5E70">{{ shipMsg }}</div>
+          <div style="height:4px;background:#F3D6DF;margin-top:10px;position:relative"><span style="{{ shipBar }}"></span></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px;text-align:center">
+          <div style="border:1px solid #F7E0E7;padding:14px 8px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8F5E70">Free returns<br><span style="text-transform:none;letter-spacing:0;color:#B98EA0;font-size:11.5px">60 days</span></div>
+          <div style="border:1px solid #F7E0E7;padding:14px 8px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8F5E70">Ships in 24h<br><span style="text-transform:none;letter-spacing:0;color:#B98EA0;font-size:11.5px">Tracked</span></div>
+          <div style="border:1px solid #F7E0E7;padding:14px 8px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8F5E70">Refillable<br><span style="text-transform:none;letter-spacing:0;color:#B98EA0;font-size:11.5px">−$8 refills</span></div>
+        </div>
+
+        <div style="margin-top:30px;border-top:1px solid #F7E0E7">
+          <sc-for list="{{ accordions }}" as="a" hint-placeholder-count="4">
+            <div style="border-bottom:1px solid #F7E0E7">
+              <button onClick="{{ a.toggle }}" style="width:100%;background:none;border:none;padding:18px 0;display:flex;justify-content:space-between;align-items:center;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#6E3048">{{ a.title }}<span style="font-size:15px;color:#B98EA0">{{ a.sign }}</span></button>
+              <sc-if value="{{ a.open }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:0 0 20px;font-size:14px;line-height:1.8;font-weight:300;color:#8F5E70;animation:lsFade .2s ease both">{{ a.body }}</div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section style="max-width:1600px;margin:0 auto;padding:88px 40px 0">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:26px">
+        <h2 style="font-family:'Playfair Display',serif;font-weight:400;font-size:34px;margin:0">Complete the look</h2>
+        <button onClick="{{ addBundle }}" style="background:#6E3048;color:#FFF7FA;border:none;padding:15px 34px;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase">Add all 3 — $86 <span style="color:#F3C4D1">(save $18)</span></button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:26px">
+        <sc-for list="{{ bundle }}" as="b" hint-placeholder-count="3">
+          <div style="display:flex;gap:18px;border:1px solid #F7E0E7;padding:18px;align-items:center">
+            <div style="{{ b.thumb }}"></div>
+            <div style="flex:1">
+              <div style="font-size:15px">{{ b.name }}</div>
+              <div style="font-size:12.5px;color:#B98EA0;font-weight:300;margin-top:4px">{{ b.desc }}</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
+                <span style="font-size:14px">{{ b.price }}</span>
+                <button onClick="{{ b.add }}" style="background:none;border:1px solid #6E3048;padding:8px 16px;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase">Add</button>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="max-width:1600px;margin:0 auto;padding:88px 40px 0">
+      <div style="display:grid;grid-template-columns:340px 1fr;gap:56px;border-top:1px solid #F7E0E7;padding-top:44px">
+        <div>
+          <h2 style="font-family:'Playfair Display',serif;font-weight:400;font-size:34px;margin:0">Reviews</h2>
+          <div style="display:flex;align-items:baseline;gap:12px;margin-top:14px">
+            <span style="font-size:44px;font-weight:300">4.8</span>
+            <div>
+              <div style="color:#E39BB2;letter-spacing:.12em">★★★★★</div>
+              <div style="font-size:12.5px;color:#B98EA0;margin-top:3px">1,284 reviews</div>
+            </div>
+          </div>
+          <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ ratingBars }}" as="r" hint-placeholder-count="5">
+              <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:#B98EA0">
+                <span style="width:24px">{{ r.label }}</span>
+                <span style="flex:1;height:4px;background:#F7E0E7;position:relative"><span style="{{ r.bar }}"></span></span>
+                <span style="width:34px;text-align:right">{{ r.pct }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:26px">
+          <sc-for list="{{ reviews }}" as="v" hint-placeholder-count="4">
+            <div style="border:1px solid #F7E0E7;padding:22px">
+              <div style="color:#E39BB2;letter-spacing:.12em;font-size:12px">{{ v.stars }}</div>
+              <div style="font-size:15px;margin-top:10px">{{ v.title }}</div>
+              <p style="font-size:13.5px;line-height:1.75;font-weight:300;color:#8F5E70;margin:8px 0 0">{{ v.body }}</p>
+              <div style="font-size:11.5px;color:#B98EA0;margin-top:14px">{{ v.meta }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section style="max-width:1600px;margin:0 auto;padding:80px 40px 0">
+      <h2 style="font-family:'Playfair Display',serif;font-weight:400;font-size:28px;margin:0 0 22px">Recently viewed</h2>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:20px">
+        <sc-for list="{{ recent }}" as="r" hint-placeholder-count="5">
+          <a href="#" onClick="{{ r.go }}">
+            <div style="{{ r.thumb }}"></div>
+            <div style="font-size:13.5px;margin-top:10px">{{ r.name }}</div>
+            <div style="font-size:12.5px;color:#B98EA0">{{ r.price }}</div>
+          </a>
+        </sc-for>
+      </div>
+    </section>
+
+    <sc-if value="{{ sticky }}" hint-placeholder-val="{{ false }}">
+      <div style="position:fixed;left:0;right:0;bottom:0;z-index:80;background:#FFF7FA;border-top:1px solid #F7E0E7;box-shadow:0 -12px 30px -22px rgba(110,48,72,.4);animation:lsFade .2s ease both">
+        <div style="max-width:1600px;margin:0 auto;padding:14px 40px;display:flex;align-items:center;gap:22px">
+          <div style="{{ stickyThumb }}"></div>
+          <div style="flex:1">
+            <div style="font-size:15px">{{ pdp.name }} — {{ shadeName }}</div>
+            <div style="font-size:12px;color:#B98EA0;margin-top:2px">{{ pdp.price }} · 4 × {{ pdp.klarna }} with Klarna · Only {{ stockLeft }} left</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <sc-for list="{{ pdpShadesShort }}" as="s" hint-placeholder-count="5">
+              <button onClick="{{ s.pick }}" style="{{ s.swatch }}"></button>
+            </sc-for>
+          </div>
+          <button onClick="{{ addPdp }}" style="background:#6E3048;color:#FFF7FA;border:none;padding:16px 44px;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase">Add to bag</button>
+        </div>
+      </div>
+    </sc-if>
+  </main>
+  </sc-if>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer style="margin-top:96px;background:#6E3048;color:#FFF7FA">
+    <div style="max-width:1600px;margin:0 auto;padding:70px 40px 40px;display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:56px">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:26px;letter-spacing:.28em;text-transform:uppercase">Lushies</div>
+        <p style="font-weight:300;font-size:14px;line-height:1.8;color:rgba(253,242,245,.66);margin:16px 0 0;max-width:36ch">Join the list for first access to drops, refill reminders and 10% off your first order.</p>
+        <div style="display:flex;margin-top:20px;max-width:400px">
+          <input placeholder="Email address" style="flex:1;background:none;border:1px solid rgba(253,242,245,.35);border-right:none;color:#FFF7FA;padding:15px 16px;font-family:inherit;font-size:13px;outline:none">
+          <button onClick="{{ subscribe }}" style="background:#FFF7FA;color:#6E3048;border:none;padding:0 26px;font-size:11px;letter-spacing:.2em;text-transform:uppercase">{{ subLabel }}</button>
+        </div>
+        <div style="display:flex;gap:20px;margin-top:26px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(253,242,245,.66)">
+          <span>Instagram</span><span>TikTok</span><span>YouTube</span><span>Pinterest</span>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;margin:0 0 18px;font-weight:500">Shop</h4>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:11px;font-size:13.5px;font-weight:300;color:rgba(253,242,245,.66)">
+          <li>New arrivals</li><li>Best sellers</li><li>Lips</li><li>Eyes</li><li>Face</li><li>Gift cards</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;margin:0 0 18px;font-weight:500">Client care</h4>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:11px;font-size:13.5px;font-weight:300;color:rgba(253,242,245,.66)">
+          <li>Shipping &amp; delivery</li><li>Returns &amp; exchanges</li><li>Track your order</li><li>Shade matching</li><li>Contact us</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;margin:0 0 18px;font-weight:500">House</h4>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:11px;font-size:13.5px;font-weight:300;color:rgba(253,242,245,.66)">
+          <li>Our story</li><li>Ingredients</li><li>Refill programme</li><li>Sustainability</li><li>Careers</li>
+        </ul>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(253,242,245,.14)">
+      <div style="max-width:1600px;margin:0 auto;padding:20px 40px;display:flex;justify-content:space-between;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(253,242,245,.5)">
+        <span>© 2026 Lushies</span>
+        <span>Privacy · Terms · Accessibility · Cookie preferences</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================== CART DRAWER ===================== -->
+  <sc-if value="{{ cartOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:120">
+      <div onClick="{{ closeCart }}" style="position:absolute;inset:0;background:rgba(110,48,72,.4)"></div>
+      <aside style="position:absolute;top:0;right:0;bottom:0;width:440px;background:#FFF7FA;display:flex;flex-direction:column;animation:lsSlideIn .28s cubic-bezier(.22,.8,.3,1) both">
+        <div style="padding:26px 28px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #F7E0E7">
+          <span style="font-size:12px;letter-spacing:.24em;text-transform:uppercase">Your bag ({{ cartCount }})</span>
+          <button onClick="{{ closeCart }}" style="background:none;border:none;font-size:18px;color:#8F5E70">&#215;</button>
+        </div>
+        <div style="padding:20px 28px;border-bottom:1px solid #F7E0E7;background:#FDEFF3">
+          <div style="font-size:12.5px;color:#8F5E70">{{ shipMsg }}</div>
+          <div style="height:4px;background:#F3D6DF;margin-top:10px;position:relative"><span style="{{ shipBar }}"></span></div>
+        </div>
+        <div style="flex:1;overflow-y:auto;padding:22px 28px;display:flex;flex-direction:column;gap:20px">
+          <sc-for list="{{ cartLines }}" as="l" hint-placeholder-count="2">
+            <div style="display:flex;gap:16px">
+              <div style="{{ l.thumb }}"></div>
+              <div style="flex:1">
+                <div style="font-size:14.5px">{{ l.name }}</div>
+                <div style="font-size:12.5px;color:#B98EA0;margin-top:3px">{{ l.shade }}</div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+                  <span style="font-size:12.5px;color:#8F5E70">Qty {{ l.qty }}</span>
+                  <span style="font-size:14px">{{ l.total }}</span>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+          <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="text-align:center;color:#B98EA0;font-size:13.5px;font-weight:300;padding:40px 0">Your bag is empty. Try a Quick add.</div>
+          </sc-if>
+        </div>
+        <div style="padding:22px 28px;border-top:1px solid #F7E0E7">
+          <div style="display:flex;justify-content:space-between;font-size:15px"><span>Subtotal</span><span>{{ subtotal }}</span></div>
+          <div style="font-size:12px;color:#B98EA0;margin-top:6px">or 4 interest-free payments of {{ subKlarna }} with Klarna</div>
+          <button style="width:100%;margin-top:16px;background:#6E3048;color:#FFF7FA;border:none;padding:17px 0;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase">Checkout</button>
+          <div style="text-align:center;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#B98EA0;margin-top:14px">Secure checkout · Free 60-day returns</div>
+        </div>
+      </aside>
+    </div>
+  </sc-if>
+
+  <!-- ===================== FILTER DRAWER ===================== -->
+  <sc-if value="{{ filterOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:125">
+      <div onClick="{{ closeFilters }}" style="position:absolute;inset:0;background:rgba(110,48,72,.4)"></div>
+      <aside style="position:absolute;top:0;right:0;bottom:0;width:420px;background:#FFF7FA;display:flex;flex-direction:column;animation:lsSlideIn .3s cubic-bezier(.22,.8,.3,1) both">
+        <div style="padding:26px 28px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #F7E0E7">
+          <span style="font-size:12px;letter-spacing:.24em;text-transform:uppercase">Filter &amp; sort</span>
+          <button onClick="{{ closeFilters }}" style="background:none;border:none;font-size:18px;color:#8F5E70">&#215;</button>
+        </div>
+
+        <div style="flex:1;overflow-y:auto;padding:6px 28px 24px">
+          <div style="padding:22px 0 18px;border-bottom:1px solid #F7E0E7">
+            <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#B98EA0">Sort by</div>
+            <div style="display:flex;flex-direction:column;gap:2px;margin-top:12px">
+              <sc-for list="{{ sortOptions }}" as="o" hint-placeholder-count="4">
+                <button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+
+          <sc-for list="{{ facets }}" as="g" hint-placeholder-count="4">
+            <div style="border-bottom:1px solid #F7E0E7">
+              <button onClick="{{ g.toggle }}" style="width:100%;background:none;border:none;padding:20px 0;display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#6E3048">{{ g.title }}<span style="font-size:15px;color:#B98EA0">{{ g.sign }}</span></button>
+              <sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
+                <div style="padding:0 0 20px;display:flex;flex-direction:column;gap:12px;animation:lsFade .2s ease both">
+                  <sc-for list="{{ g.items }}" as="i" hint-placeholder-count="4">
+                    <button onClick="{{ i.toggle }}" style="display:flex;align-items:center;gap:12px;background:none;border:none;padding:0;text-align:left;width:100%">
+                      <span style="{{ i.box }}">{{ i.tick }}</span>
+                      <sc-if value="{{ i.hex }}" hint-placeholder-val="{{ false }}">
+                        <span style="{{ i.dot }}"></span>
+                      </sc-if>
+                      <span style="flex:1;font-size:14px;font-weight:300;color:#7A4A5C">{{ i.label }}</span>
+                      <span style="font-size:12px;color:#CBA9B7">{{ i.count }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+
+          <div style="padding:22px 0">
+            <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#B98EA0">Price</div>
+            <div style="display:flex;align-items:center;gap:12px;margin-top:16px">
+              <span style="flex:1;border:1px solid #F3D6DF;padding:12px 14px;font-size:13.5px;color:#8F5E70">$22</span>
+              <span style="color:#CBA9B7">—</span>
+              <span style="flex:1;border:1px solid #F3D6DF;padding:12px 14px;font-size:13.5px;color:#8F5E70">$96</span>
+            </div>
+            <div style="height:2px;background:#F3D6DF;margin:18px 4px 0;position:relative">
+              <span style="position:absolute;left:0;right:0;top:0;bottom:0;background:#6E3048"></span>
+              <span style="position:absolute;left:-5px;top:-4px;width:10px;height:10px;border-radius:50%;background:#6E3048"></span>
+              <span style="position:absolute;right:-5px;top:-4px;width:10px;height:10px;border-radius:50%;background:#6E3048"></span>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding:20px 28px;border-top:1px solid #F7E0E7;display:flex;gap:12px;align-items:center">
+          <button onClick="{{ clearFilters }}" style="background:none;border:1px solid #EDC3D0;padding:16px 22px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#8F5E70">Clear</button>
+          <button onClick="{{ closeFilters }}" style="flex:1;background:#6E3048;color:#FFF7FA;border:none;padding:16px 0;font-size:11.5px;letter-spacing:.22em;text-transform:uppercase">Show {{ resultCount }}</button>
+        </div>
+      </aside>
+    </div>
+  </sc-if>
+
+  <!-- ===================== SHADE QUIZ ===================== -->
+  <sc-if value="{{ quizOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:130;display:flex;align-items:center;justify-content:center">
+      <div onClick="{{ closeQuiz }}" style="position:absolute;inset:0;background:rgba(110,48,72,.5)"></div>
+      <div style="position:relative;width:620px;background:#FFF7FA;padding:44px 48px;animation:lsFade .24s ease both">
+        <button onClick="{{ closeQuiz }}" style="position:absolute;top:18px;right:20px;background:none;border:none;font-size:18px;color:#8F5E70">&#215;</button>
+        <div style="font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:#E39BB2">{{ quizStepLabel }}</div>
+        <h3 style="font-family:'Playfair Display',serif;font-weight:400;font-size:32px;margin:12px 0 0">{{ quizTitle }}</h3>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:26px">
+          <sc-for list="{{ quizOptions }}" as="o" hint-placeholder-count="3">
+            <button onClick="{{ o.pick }}" style="text-align:left;background:none;border:1px solid #EDC3D0;padding:18px 20px;font-size:14.5px" style-hover="border-color:#6E3048;background:#FDEFF3">{{ o.label }}</button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ quizDone }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;gap:20px;align-items:center;margin-top:26px">
+            <div style="width:110px;height:110px;background:linear-gradient(150deg,#D089A0,#B36F88)"></div>
+            <div>
+              <div style="font-size:19px">Your match: <b style="font-weight:500">Nocturne 04 · Bordeaux</b></div>
+              <p style="font-size:13.5px;line-height:1.7;font-weight:300;color:#8F5E70;margin:8px 0 0;max-width:34ch">Cool-toned deep red in the matte finish — the shade cool undertones re-order most.</p>
+              <button onClick="{{ quizAdd }}" style="margin-top:14px;background:#6E3048;color:#FFF7FA;border:none;padding:14px 30px;font-size:11px;letter-spacing:.2em;text-transform:uppercase">Add to bag — $38</button>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;bottom:26px;left:26px;z-index:140;background:#6E3048;color:#FFF7FA;padding:15px 24px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;animation:lsFade .2s ease both">{{ toast }}</div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1000}}">
+const CAT = [
+  { name: 'Lips', g: 'linear-gradient(150deg,#D089A0,#B36F88)' },
+  { name: 'Eyes', g: 'linear-gradient(150deg,#8A5A6E,#7A4A5C)' },
+  { name: 'Face', g: 'linear-gradient(150deg,#FCE8EF,#EDC2CF)' },
+  { name: 'Fragrance', g: 'linear-gradient(150deg,#F3C4D1,#D68FA6)' },
+  { name: 'Sets', g: 'linear-gradient(150deg,#FBE1E9,#EFC0CE)' }
+];
+
+const SHADES = [
+  { name: 'Bare Silk', hex: '#DE9A96' }, { name: 'Praline', hex: '#A96B54' },
+  { name: 'Rosewood', hex: '#8E4A48' }, { name: 'Bordeaux', hex: '#C87F98' },
+  { name: 'Noir Cherry', hex: '#B36F88' }, { name: 'Terracotta', hex: '#E0A08F' },
+  { name: 'Blush Nude', hex: '#D6A594' }, { name: 'Cocoa', hex: '#B78E90' },
+  { name: 'Fig', hex: '#A9758A' }, { name: 'Clay', hex: '#96604A' }
+];
+
+const PRODUCTS = [
+  { id: 'p1', name: 'Velvet Blur Lip', desc: 'Weightless 12-hour matte pigment', price: 38, rating: 4.8, reviews: 1284, badge: 'Best seller', low: 'Only 6 left', g: 'linear-gradient(155deg,#D089A0,#B36F88)' },
+  { id: 'p2', name: 'Lacquer Gloss', desc: 'Mirror shine, non-sticky finish', price: 32, rating: 4.6, reviews: 842, badge: 'New', low: '', g: 'linear-gradient(155deg,#FBE1E9,#EFC0CE)' },
+  { id: 'p3', name: 'Silk Lip Liner', desc: 'Gliding pencil, no tug or drag', price: 24, rating: 4.9, reviews: 2011, badge: '', low: 'Low stock', g: 'linear-gradient(155deg,#F3C4D1,#D68FA6)' },
+  { id: 'p4', name: 'Cashmere Balm', desc: 'Overnight lip treatment with ceramides', price: 28, rating: 4.7, reviews: 654, badge: '', low: '', g: 'linear-gradient(155deg,#FCE8EF,#EDC2CF)' },
+  { id: 'p5', name: 'The Lip Wardrobe', desc: 'Four full-size shades in a brass case', price: 96, rating: 4.9, reviews: 318, badge: 'Set · save $56', low: 'Only 11 left', g: 'linear-gradient(155deg,#8A5A6E,#7A4A5C)' },
+  { id: 'p6', name: 'Satin Lip Couture', desc: 'Cushioned satin with 8-hour wear', price: 36, rating: 4.5, reviews: 977, badge: '', low: '', g: 'linear-gradient(155deg,#E0A08F,#C98878)' },
+  { id: 'p7', name: 'Sheer Tint Oil', desc: 'Buildable wash of colour + squalane', price: 30, rating: 4.4, reviews: 421, badge: '', low: 'Only 3 left', g: 'linear-gradient(155deg,#D6A594,#DDAA9C)' },
+  { id: 'p8', name: 'Refill · Velvet Blur', desc: 'Cartridge refill for the brass case', price: 22, rating: 4.8, reviews: 289, badge: 'Refill', low: '', g: 'linear-gradient(155deg,#A9758A,#3B1727)' }
+];
+
+const money = n => '$' + n.toFixed(2);
+const stars = r => '★★★★★'.slice(0, Math.round(r)) + '☆☆☆☆☆'.slice(0, 5 - Math.round(r));
+
+class Component extends DCLogic {
+  state = {
+    page: 'home', hero: 'a', mega: false, slide: 0, announce: 0,
+    cart: [], cartOpen: false, toast: '',
+    shade: 3, qty: 1, gal: 0, acc: 0, sticky: false,
+    filters: [], cardShade: {}, quiz: false, quizStep: 0, subbed: false,
+    filterOpen: false, facetOpen: { Finish: true, 'Colour family': true, 'Wear time': false, Concern: false }, sort: 'Best selling'
+  };
+
+  componentDidMount() {
+    this._t = setInterval(() => this.setState(s => ({ announce: (s.announce + 1) % 3 })), 4200);
+    this._s = setInterval(() => this.setState(s => (s.page === 'home' && s.hero === 'a' ? { slide: (s.slide + 1) % 3 } : {})), 6000);
+    this._scroll = () => {
+      const el = document.scrollingElement || document.documentElement;
+      this.setState({ sticky: el.scrollTop > 780 });
+    };
+    window.addEventListener('scroll', this._scroll, { passive: true });
+  }
+  componentWillUnmount() {
+    clearInterval(this._t); clearInterval(this._s);
+    window.removeEventListener('scroll', this._scroll);
+  }
+
+  nav(page) {
+    return e => {
+      if (e && e.preventDefault) e.preventDefault();
+      this.setState({ page, mega: false, sticky: false });
+      window.scrollTo(0, 0);
+    };
+  }
+  flash(msg) {
+    this.setState({ toast: msg });
+    clearTimeout(this._toast);
+    this._toast = setTimeout(() => this.setState({ toast: '' }), 2200);
+  }
+  add(name, shade, price, qty) {
+    this.setState(s => ({ cart: s.cart.concat([{ name, shade, price, qty: qty || 1 }]), cartOpen: true }));
+  }
+
+  renderVals() {
+    const s = this.state;
+    const cartCount = s.cart.reduce((n, l) => n + l.qty, 0);
+    const sub = s.cart.reduce((n, l) => n + l.price * l.qty, 0);
+    const remain = Math.max(0, 75 - sub);
+    const pct = Math.min(100, (sub / 75) * 100);
+    const pdp = PRODUCTS[0];
+
+    const slides = [
+      { eyebrow: 'Just dropped', title: 'The Nocturne lip', body: 'Twelve hours of transfer-resistant velvet pigment in a refillable brass case. Forty-eight shades, made in France.', g: 'linear-gradient(160deg,#C4718F,#9A5C74)' },
+      { eyebrow: 'Refill programme', title: 'Keep the case. Change the colour.', body: 'Every Lushies case is refillable — $8 off each refill, returned packaging recycled in-house.', g: 'linear-gradient(160deg,#F3C4D1,#C97F98)' },
+      { eyebrow: 'The gifting edit', title: 'The Lip Wardrobe', body: 'Four full-size shades, one brass case, wrapped in hand-marbled paper.', g: 'linear-gradient(160deg,#8A5A6E,#7A4A5C)' }
+    ];
+    const sl = slides[s.slide];
+
+    const heroBtn = k => 'background:' + (s.hero === k ? '#6E3048' : 'transparent') + ';color:' + (s.hero === k ? '#FFF7FA' : '#6E3048') + ';border:1px solid #6E3048;padding:7px 14px;font-size:10px;letter-spacing:.16em;text-transform:uppercase';
+    const dot = i => 'width:' + (s.slide === i ? '26px' : '7px') + ';height:7px;border-radius:4px;border:none;background:' + (s.slide === i ? '#FFF7FA' : 'rgba(253,242,245,.45)') + ';transition:width .3s';
+
+    const cardImg = g => 'position:relative;aspect-ratio:3/4;background:' + g + ';cursor:pointer';
+
+    const mkProduct = p => {
+      const sel = s.cardShade[p.id] || 0;
+      return {
+        name: p.name, desc: p.desc, price: money(p.price), badge: p.badge, lowStock: p.low,
+        stars: stars(p.rating), reviewLabel: p.reviews.toLocaleString() + ' reviews',
+        klarna: money(p.price / 4), shadeLabel: SHADES[sel].name,
+        imgStyle: cardImg(p.g), go: this.nav('pdp'),
+        quickAdd: e => { e.stopPropagation(); this.add(p.name, SHADES[sel].name, p.price, 1); this.flash('Added — ' + p.name); },
+        shades: SHADES.slice(0, 5).map((sh, i) => ({
+          dot: 'width:14px;height:14px;border-radius:50%;background:' + sh.hex + ';display:inline-block',
+          swatch: 'width:18px;height:18px;border-radius:50%;background:' + sh.hex + ';border:1px solid ' + (sel === i ? '#6E3048' : 'transparent') + ';outline:' + (sel === i ? '1px solid #6E3048' : 'none') + ';outline-offset:2px;padding:0',
+          pick: e => { e.stopPropagation(); this.setState(st => ({ cardShade: Object.assign({}, st.cardShade, { [p.id]: i }) })); }
+        }))
+      };
+    };
+
+    const filterDefs = ['Matte', 'Satin', 'High shine', 'Nude', 'Red', 'Under $30'];
+    const accDefs = [
+      { title: 'Product information', body: '3.2g / 0.11 oz. Velvet matte finish in a refillable brushed-brass case. Twelve-hour wear tested on 112 participants; 94% reported no transfer after 6 hours. Fragrance-free, non-drying, buildable in one to three passes.' },
+      { title: 'Ingredients', body: 'Squalane, hydrogenated polyisobutene, ceramide NP, jojoba esters, candelilla wax, vitamin E. Vegan, cruelty-free, free from parabens, talc and mineral oil. Full INCI list on pack.' },
+      { title: 'How to apply', body: 'Line with Silk Lip Liner, then press pigment from the centre outward. Blot for a stained finish, or add a second pass for full opacity. Layer Cashmere Balm over the top for satin.' },
+      { title: 'Shipping & returns', body: 'Free standard shipping over $75, dispatched within 24 hours. Express delivery $12. Sixty-day returns on opened products — we refund without asking why.' }
+    ];
+    const quizQs = [
+      { label: 'Question 1 of 3', title: 'What is your undertone?', options: ['Cool — silver suits me', 'Warm — gold suits me', 'Neutral / not sure'] },
+      { label: 'Question 2 of 3', title: 'Which finish do you reach for?', options: ['Matte, no shine', 'Satin, cushioned', 'High shine gloss'] },
+      { label: 'Question 3 of 3', title: 'Where are you wearing it?', options: ['Every day, desk to dinner', 'Evening and events', 'A statement, always'] }
+    ];
+    const q = quizQs[Math.min(s.quizStep, 2)];
+
+    return {
+      isHome: s.page === 'home', isCollection: s.page === 'collection', isPdp: s.page === 'pdp',
+      goHome: this.nav('home'), goCollection: this.nav('collection'), goPdp: this.nav('pdp'),
+      megaOpen: s.mega,
+      openMega: () => this.setState({ mega: true }),
+      closeMega: () => this.setState({ mega: false }),
+
+      announce: ['Complimentary shipping on orders over $75', 'Just dropped — the Nocturne lip in 48 shades', 'Refill your case and save $8 on every cartridge'][s.announce],
+      nextAnnounce: () => this.setState(st => ({ announce: (st.announce + 1) % 3 })),
+      prevAnnounce: () => this.setState(st => ({ announce: (st.announce + 2) % 3 })),
+
+      heroA: s.hero === 'a', heroB: s.hero === 'b', heroC: s.hero === 'c',
+      setHeroA: () => this.setState({ hero: 'a' }), setHeroB: () => this.setState({ hero: 'b' }), setHeroC: () => this.setState({ hero: 'c' }),
+      heroBtnA: heroBtn('a'), heroBtnB: heroBtn('b'), heroBtnC: heroBtn('c'),
+      slideBg: 'position:absolute;inset:0;background:' + sl.g + ';transition:background .6s',
+      slideEyebrow: sl.eyebrow, slideTitle: sl.title, slideBody: sl.body,
+      dot0: dot(0), dot1: dot(1), dot2: dot(2),
+      setSlide0: () => this.setState({ slide: 0 }), setSlide1: () => this.setState({ slide: 1 }), setSlide2: () => this.setState({ slide: 2 }),
+
+      categories: CAT.map(c => ({ name: c.name, style: 'aspect-ratio:4/5;background:' + c.g, go: this.nav('collection') })),
+      featured: PRODUCTS.slice(0, 4).map(mkProduct),
+      products: PRODUCTS.map(mkProduct),
+
+      subCollections: CAT.concat([{ name: 'Refills' }]).map((c, i) => ({
+        name: c.name,
+        style: 'flex:none;padding:9px 20px;border:1px solid ' + (i === 0 ? '#6E3048' : '#F3D6DF') + ';background:' + (i === 0 ? '#6E3048' : 'transparent') + ';color:' + (i === 0 ? '#FFF7FA' : '#8F5E70') + ';font-size:11px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer'
+      })),
+      filters: filterDefs.map(f => {
+        const on = s.filters.indexOf(f) > -1;
+        return {
+          label: on ? f + ' ✕' : f,
+          style: 'background:' + (on ? '#6E3048' : 'transparent') + ';color:' + (on ? '#FFF7FA' : '#8F5E70') + ';border:1px solid ' + (on ? '#6E3048' : '#F3D6DF') + ';padding:9px 16px;font-size:11px;letter-spacing:.14em;text-transform:uppercase',
+          toggle: () => this.setState(st => ({ filters: on ? st.filters.filter(x => x !== f) : st.filters.concat([f]) }))
+        };
+      }),
+      resultCount: (s.filters.length ? 12 + s.filters.length * 3 : 48) + ' products',
+      filterOpen: s.filterOpen,
+      openFilters: () => this.setState({ filterOpen: true }),
+      closeFilters: () => this.setState({ filterOpen: false }),
+      clearFilters: () => this.setState({ filters: [] }),
+      filterCountLabel: s.filters.length ? '(' + s.filters.length + ')' : '',
+      sortOptions: ['Best selling', 'Newest', 'Price: low to high', 'Price: high to low', 'Top rated'].map(o => ({
+        label: o,
+        style: 'text-align:left;background:none;border:none;padding:10px 0;font-size:14px;font-weight:300;color:' + (s.sort === o ? '#6E3048' : '#8F5E70') + ';border-bottom:1px solid ' + (s.sort === o ? '#6E3048' : 'transparent') + ';align-self:flex-start',
+        pick: () => this.setState({ sort: o })
+      })),
+      facets: [
+        { title: 'Finish', items: [['Matte', 18], ['Satin', 12], ['High shine', 9], ['Sheer tint', 6], ['Balm', 3]] },
+        { title: 'Colour family', items: [['Nude', 14, '#DE9A96'], ['Rose', 9, '#B4707A'], ['Red', 11, '#D089A0'], ['Berry', 7, '#A9758A'], ['Brown', 7, '#B78E90']] },
+        { title: 'Wear time', items: [['4–6 hours', 12], ['8–10 hours', 21], ['12 hours+', 15]] },
+        { title: 'Concern', items: [['Long wear', 24], ['Hydrating', 17], ['Plumping', 8], ['Transfer-proof', 19]] }
+      ].map(g => ({
+        title: g.title, open: !!s.facetOpen[g.title], sign: s.facetOpen[g.title] ? '−' : '+',
+        toggle: () => this.setState(st => ({ facetOpen: Object.assign({}, st.facetOpen, { [g.title]: !st.facetOpen[g.title] }) })),
+        items: g.items.map(it => {
+          const on = s.filters.indexOf(it[0]) > -1;
+          return {
+            label: it[0], count: it[1], hex: it[2] || '',
+            dot: 'width:16px;height:16px;border-radius:50%;background:' + (it[2] || 'transparent'),
+            box: 'width:16px;height:16px;flex:none;border:1px solid ' + (on ? '#6E3048' : '#EDC3D0') + ';background:' + (on ? '#6E3048' : 'transparent') + ';color:#FFF7FA;font-size:10px;display:inline-flex;align-items:center;justify-content:center',
+            tick: on ? '✓' : '',
+            toggle: () => this.setState(st => ({ filters: on ? st.filters.filter(x => x !== it[0]) : st.filters.concat([it[0]]) }))
+          };
+        })
+      })),
+
+      pdp: { name: pdp.name, price: money(pdp.price), stars: stars(pdp.rating), reviewLabel: pdp.reviews.toLocaleString() + ' reviews', klarna: money(pdp.price / 4) },
+      pdpHero: 'aspect-ratio:4/5;background:' + ['linear-gradient(155deg,#D089A0,#B36F88)', 'linear-gradient(155deg,#F3C4D1,#C97F98)', 'linear-gradient(155deg,#8A5A6E,#7A4A5C)', 'linear-gradient(155deg,#FCE8EF,#EDC2CF)'][s.gal],
+      gallery: [0, 1, 2, 3].map(i => ({
+        style: 'aspect-ratio:4/5;width:100%;border:1px solid ' + (s.gal === i ? '#6E3048' : '#F7E0E7') + ';padding:0;background:' + ['linear-gradient(155deg,#D089A0,#B36F88)', 'linear-gradient(155deg,#F3C4D1,#C97F98)', 'linear-gradient(155deg,#8A5A6E,#7A4A5C)', 'linear-gradient(155deg,#FCE8EF,#EDC2CF)'][i],
+        pick: () => this.setState({ gal: i })
+      })),
+      pdpShades: SHADES.map((sh, i) => ({
+        name: sh.name,
+        swatch: 'width:34px;height:34px;border-radius:50%;background:' + sh.hex + ';border:none;outline:1px solid ' + (s.shade === i ? '#6E3048' : 'transparent') + ';outline-offset:3px;padding:0',
+        pick: () => this.setState({ shade: i })
+      })),
+      pdpShadesShort: SHADES.slice(0, 6).map((sh, i) => ({
+        swatch: 'width:22px;height:22px;border-radius:50%;background:' + sh.hex + ';border:none;outline:1px solid ' + (s.shade === i ? '#6E3048' : 'transparent') + ';outline-offset:2px;padding:0',
+        pick: () => this.setState({ shade: i })
+      })),
+      shadeName: SHADES[s.shade].name,
+      stockLeft: 4 + (s.shade % 5),
+      qty: s.qty,
+      incQty: () => this.setState(st => ({ qty: st.qty + 1 })),
+      decQty: () => this.setState(st => ({ qty: Math.max(1, st.qty - 1) })),
+      pdpTotal: money(pdp.price * s.qty),
+      addPdp: () => { this.add(pdp.name, SHADES[s.shade].name, pdp.price, s.qty); this.flash('Added to bag'); },
+      stickyThumb: 'width:52px;height:64px;background:linear-gradient(155deg,#D089A0,#B36F88)',
+      sticky: s.sticky && s.page === 'pdp',
+
+      shipMsg: remain > 0 ? 'You are ' + money(remain) + ' away from complimentary shipping' : 'Complimentary shipping unlocked — thank you',
+      shipBar: 'position:absolute;left:0;top:0;bottom:0;width:' + pct + '%;background:' + (remain > 0 ? '#E39BB2' : '#3C6B4F') + ';transition:width .4s',
+
+      accordions: accDefs.map((a, i) => ({
+        title: a.title, body: a.body, open: s.acc === i, sign: s.acc === i ? '−' : '+',
+        toggle: () => this.setState(st => ({ acc: st.acc === i ? -1 : i }))
+      })),
+      bundle: PRODUCTS.slice(2, 5).map(p => ({
+        name: p.name, desc: p.desc, price: money(p.price),
+        thumb: 'width:92px;height:112px;flex:none;background:' + p.g,
+        add: () => { this.add(p.name, 'Default', p.price, 1); this.flash('Added — ' + p.name); }
+      })),
+      addBundle: () => {
+        PRODUCTS.slice(2, 5).forEach(p => this.add(p.name, 'Default', p.price, 1));
+        this.flash('Bundle added — you saved $18');
+      },
+      ratingBars: [['5★', 84], ['4★', 11], ['3★', 3], ['2★', 1], ['1★', 1]].map(r => ({
+        label: r[0], pct: r[1] + '%',
+        bar: 'position:absolute;left:0;top:0;bottom:0;width:' + r[1] + '%;background:#E39BB2'
+      })),
+      reviews: [
+        { stars: '★★★★★', title: 'Genuinely does not budge', body: 'Wore Bordeaux through a nine-hour shift and dinner. One touch-up, no flaking, no dry feeling at all.', meta: 'Amara O. · Verified buyer · Shade: Bordeaux' },
+        { stars: '★★★★★', title: 'The refill sold me', body: 'Bought the case once and now I just re-order cartridges. Feels considerably less wasteful and cheaper long term.', meta: 'Ines R. · Verified buyer · Shade: Praline' },
+        { stars: '★★★★☆', title: 'Beautiful, slightly deeper than shown', body: 'Rosewood pulls a touch more plum in daylight than on screen. Still gorgeous, just size up your expectations.', meta: 'Dana K. · Verified buyer · Shade: Rosewood' },
+        { stars: '★★★★★', title: 'Weight of the case is unreal', body: 'Feels like a piece of jewellery in the bag. The magnet click is oddly satisfying.', meta: 'Priya S. · Verified buyer · Shade: Noir Cherry' }
+      ],
+      recent: PRODUCTS.slice(1, 6).map(p => ({
+        name: p.name, price: money(p.price), go: this.nav('pdp'),
+        thumb: 'aspect-ratio:3/4;background:' + p.g
+      })),
+
+      cartCount, cartOpen: s.cartOpen, cartEmpty: s.cart.length === 0,
+      openCart: () => this.setState({ cartOpen: true }),
+      closeCart: () => this.setState({ cartOpen: false }),
+      cartLines: s.cart.map(l => ({
+        name: l.name, shade: 'Shade — ' + l.shade, qty: l.qty, total: money(l.price * l.qty),
+        thumb: 'width:74px;height:92px;flex:none;background:linear-gradient(155deg,#D089A0,#B36F88)'
+      })),
+      subtotal: money(sub), subKlarna: money(sub / 4),
+
+      quizOpen: s.quiz, quizStepLabel: s.quizStep > 2 ? 'Your match' : q.label,
+      quizTitle: s.quizStep > 2 ? 'Two shades, chosen for you' : q.title,
+      quizDone: s.quizStep > 2,
+      quizOptions: s.quizStep > 2 ? [] : q.options.map(o => ({ label: o, pick: () => this.setState(st => ({ quizStep: st.quizStep + 1 })) })),
+      openQuiz: () => this.setState({ quiz: true, quizStep: 0 }),
+      closeQuiz: () => this.setState({ quiz: false }),
+      quizAdd: () => { this.add('Velvet Blur Lip', 'Bordeaux', 38, 1); this.setState({ quiz: false }); this.flash('Your match is in the bag'); },
+
+      subscribe: () => { this.setState({ subbed: true }); this.flash('Welcome — check your inbox for 10% off'); },
+      subLabel: s.subbed ? 'Joined' : 'Join',
+      toast: s.toast
+    };
+  }
+}
+
+</script>
+</body>
+</html>
