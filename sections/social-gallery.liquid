@@ -1,0 +1,209 @@
+{{ 'section-collection-list.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .social-gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--grid-mobile-horizontal-spacing, 8px);
+  }
+
+  @media screen and (min-width: 750px) {
+    .social-gallery__grid {
+      grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+      gap: var(--grid-desktop-horizontal-spacing, 8px);
+    }
+  }
+
+  .social-gallery__tile {
+    position: relative;
+    display: block;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+  }
+
+  .social-gallery__tile img,
+  .social-gallery__tile .placeholder-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="collection-list-wrapper page-width isolate{% if section.settings.heading == blank %} no-heading{% endif %} section-{{ section.id }}-padding">
+    {%- unless section.settings.heading == blank -%}
+      <div class="title-wrapper-with-link title-wrapper--self-padded-mobile title-wrapper--no-top-margin">
+        <h2
+          id="SectionHeading-{{ section.id }}"
+          class="collection-list-title inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+        >
+          {{ section.settings.heading }}
+        </h2>
+      </div>
+    {%- endunless -%}
+
+    <ul class="social-gallery__grid list-unstyled" role="list">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign placeholder_image_index = forloop.index0 | modulo: 4 | plus: 1
+          assign placeholder_image = 'collection-apparel-' | append: placeholder_image_index
+        -%}
+        <li
+          id="SocialTile-{{ section.id }}-{{ forloop.index }}"
+          class="social-gallery__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+          {{ block.shopify_attributes }}
+          {% if settings.animations_reveal_on_scroll %}
+            data-cascade
+            style="--animation-order: {{ forloop.index }};"
+          {% endif %}
+        >
+          {%- if block.settings.link != blank -%}
+            <a href="{{ block.settings.link }}" class="social-gallery__tile" aria-label="{{ block.settings.alt | default: section.settings.heading | escape }}">
+          {%- else -%}
+            <span class="social-gallery__tile">
+          {%- endif -%}
+
+          {%- if block.settings.image != blank -%}
+            {{
+              block.settings.image
+              | image_url: width: 1500
+              | image_tag:
+                widths: '165, 360, 535, 750, 1070, 1500',
+                sizes: '(min-width: 750px) calc(100vw / ' | append: section.settings.columns_desktop | append: '), calc(100vw / 2)',
+                loading: 'lazy',
+                alt: block.settings.alt
+            }}
+          {%- else -%}
+            {{ placeholder_image | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+
+          {%- if block.settings.link != blank -%}
+            </a>
+          {%- else -%}
+            </span>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.social-gallery.name",
+  "tag": "section",
+  "class": "section section-collection-list",
+  "max_blocks": 12,
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "t:sections.social-gallery.settings.heading.default",
+      "label": "t:sections.social-gallery.settings.heading.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        { "value": "h2", "label": "t:sections.all.heading_size.options__1.label" },
+        { "value": "h1", "label": "t:sections.all.heading_size.options__2.label" },
+        { "value": "h0", "label": "t:sections.all.heading_size.options__3.label" },
+        { "value": "hxl", "label": "t:sections.all.heading_size.options__4.label" },
+        { "value": "hxxl", "label": "t:sections.all.heading_size.options__5.label" }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 3,
+      "max": 8,
+      "step": 1,
+      "default": 6,
+      "label": "t:sections.social-gallery.settings.columns_desktop.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 88
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "t:sections.social-gallery.blocks.image.name",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.social-gallery.blocks.image.settings.image.label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.social-gallery.blocks.image.settings.link.label"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "t:sections.social-gallery.blocks.image.settings.alt.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.social-gallery.presets.name",
+      "blocks": [
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,250 @@
+/*
+  Lushies visual overrides.
+  Dawn's settings (colors, fonts, spacing) only parametrize a handful of
+  tokens — a lot of the prototype's actual look (uppercase tracked labels,
+  button proportions, hairline borders, link accent color) is baked into
+  Dawn's component CSS as fixed values. This file overrides those fixed
+  values directly, pulled from static-template/Lushies Store.dc.html's
+  inline styles. Loaded after base.css and all component CSS in
+  theme.liquid, so plain-specificity selectors here win on source order.
+*/
+
+:root {
+  --color-accent: 227, 155, 178; /* #E39BB2 */
+}
+
+/* Reset / global feel */
+::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--color-foreground), 0.18);
+  border-radius: 3px;
+}
+
+a:hover {
+  color: rgb(var(--color-accent));
+}
+
+/* Uppercase tracked labels (eyebrows, captions) */
+.caption-with-letter-spacing,
+.caption-with-letter-spacing--medium,
+.caption-with-letter-spacing--large {
+  letter-spacing: 0.28em;
+  color: rgba(var(--color-foreground), 0.6);
+}
+
+/* Buttons */
+.button,
+.shopify-challenge__button,
+.customer button {
+  padding: 0 3.2rem;
+  min-height: 5rem;
+  font-size: 1.15rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.button--tertiary {
+  padding: 1rem 1.8rem;
+  font-size: 1.05rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.announcement-bar--capitalize .announcement-bar__message {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 1.15rem;
+}
+
+/* Badges */
+.badge {
+  font-size: 0.95rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-radius: 0;
+  padding: 0.5rem 1rem 0.5rem;
+}
+
+/* Header nav */
+.header__menu-item {
+  font-size: 1.2rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.header__menu-item span {
+  transition: color var(--duration-short) ease;
+}
+
+.header__active-menu-item {
+  text-decoration: underline;
+  text-underline-offset: 0.4rem;
+}
+
+.mega-menu__link {
+  font-weight: 300;
+}
+
+/* Footer headings */
+.footer-block__heading {
+  font-size: 1.1rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Product / collection cards */
+.card__heading {
+  font-weight: 400;
+}
+
+.card-information .price {
+  font-weight: 300;
+}
+
+/* Slot the left-side country/search zone into Dawn's named grid area for the
+   top-center header layout (heading/icons/navigation are named areas there;
+   an unassigned child would just get auto-placed and could overlap). Only
+   relevant on desktop — on mobile, header-drawer (the hamburger) already
+   owns this same grid area, so hide ours there rather than fight it; mobile
+   already gets country/language selection inside the drawer menu itself. */
+.header--top-center .header__icons--left {
+  grid-area: left-icons;
+}
+
+@media screen and (max-width: 989px) {
+  .header__icons--left {
+    display: none;
+  }
+}
+
+/* Header utilities in text mode (search / account / wishlist / bag as words instead of icons) */
+.header__icons--text .header__icon {
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  padding: 0 1rem;
+}
+
+.header__icon-text {
+  font-size: 1.15rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.header__icons--text .cart-count-bubble {
+  position: static;
+  display: inline-flex;
+  margin-left: 0.7rem;
+  height: 1.7rem;
+  width: 1.7rem;
+}
+
+/* Sold out / sale text on cards read as tracked labels, not badges, in the prototype */
+.quick-add__submit {
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 1.1rem;
+}
+
+/* Product card shade swatches, driven by the product's native swatch-enabled
+   option (Shopify variant options + swatch config) — not a metafield. */
+.card-swatches {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+}
+
+.card-swatches .swatch {
+  --swatch--size: 1.6rem;
+}
+
+/* Product card quick-add overlaying the bottom of the image instead of
+   sitting in the info block below it. Rendered as a sibling of .card__media
+   (not nested inside it) and positioned relative to .card__inner, which is
+   already the ratio/positioning box. This has to stay a sibling, not a
+   child of .card__media: .card__media carries an explicit z-index: 0
+   (Dawn's own Safari border-radius fix, component-card.css), which makes it
+   its own stacking context — anything nested inside it is capped at that
+   "0" no matter what z-index you give it internally. The full-card title
+   link's ::after (component-card.css, z-index: 1) sits in .card__content,
+   which has no z-index of its own, so that ::after escapes to compete
+   directly at the .card__inner level — meaning it was beating .card__media
+   (and anything inside it, including this button) every time, regardless
+   of this rule's z-index. As a direct sibling instead, z-index: 2 here
+   competes at that same .card__inner level and actually wins. */
+.quick-add--overlay {
+  position: absolute;
+  left: 1.4rem;
+  right: 1.4rem;
+  bottom: 1.4rem;
+  margin: 0;
+  z-index: 2;
+}
+
+.quick-add--overlay .quick-add__submit:not([disabled]):hover {
+  background-color: #6e3048;
+  color: #fff7fa;
+}
+
+/* Collection-list section: centered eyebrow + heading block */
+.title-wrapper--center {
+  justify-content: center;
+  text-align: center;
+}
+
+.collection-list-heading-block {
+  /* Only the text color from heading_color_scheme should apply here — the
+     scheme's own background-color rule would otherwise paint a box behind
+     just the eyebrow/heading, since color-X sets both unconditionally. */
+  background-color: transparent;
+}
+
+.collection-list-eyebrow {
+  margin-bottom: 0.8rem;
+}
+
+/* Slideshow slogan (eyebrow line above the heading) */
+.banner__slogan {
+  display: block;
+  margin-bottom: 1.4rem;
+}
+
+/* Pagination controls overlay the bottom of the slide image instead of sitting in a bordered strip below it */
+.slideshow__controls:not(.slideshow__controls--top) {
+  position: absolute;
+  left: 50%;
+  bottom: 2.4rem;
+  transform: translateX(-50%);
+  z-index: 5;
+  width: auto;
+  border: none;
+  background: none;
+}
+
+/* Pagination: active dot becomes a wide pill instead of a bigger circle */
+.slider-counter__link--dots .dot {
+  width: 0.8rem;
+  height: 0.8rem;
+  border: none;
+  border-radius: 999px;
+  background-color: rgba(var(--color-foreground), 0.3);
+  transition: width var(--duration-short) ease, background-color var(--duration-short) ease;
+}
+
+.slider-counter__link--active.slider-counter__link--dots .dot,
+.slider-counter__link--dots:not(.slider-counter__link--active):hover .dot {
+  transform: none;
+}
+
+.slider-counter__link--active.slider-counter__link--dots .dot {
+  width: 2.6rem;
+  background-color: rgb(var(--color-foreground));
+}

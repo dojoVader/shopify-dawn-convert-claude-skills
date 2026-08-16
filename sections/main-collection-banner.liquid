@@ -1,49 +1,107 @@
 {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
 {{ 'component-collection-hero.css' | asset_url | stylesheet_tag }}
 
-{%- style -%}
-  @media screen and (max-width: 749px) {
-    .collection-hero--with-image .collection-hero__inner {
-      padding-bottom: calc({{ settings.media_shadow_vertical_offset | at_least: 0 }}px + 2rem);
+{%- if section.settings.banner_style == 'cover' -%}
+  {{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
+
+  {%- style -%}
+    #CollectionBanner-{{ section.id }}::after,
+    #CollectionBanner-{{ section.id }} .banner__media::after {
+      opacity: {{ section.settings.cover_overlay_opacity | divided_by: 100.0 }};
     }
-  }
-{%- endstyle -%}
+  {%- endstyle -%}
 
-<div class="collection-hero{% if section.settings.show_collection_image and collection.image %} collection-hero--with-image{% endif %} color-{{ section.settings.color_scheme }} gradient">
-  <div class="collection-hero__inner page-width {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
-    <div class="collection-hero__text-wrapper">
-      <h1 class="collection-hero__title">
-        <span class="visually-hidden">{{ 'sections.collection_template.title' | t }}: </span>
-        {{- collection.title | escape -}}
-      </h1>
-
-      {%- if section.settings.show_collection_description -%}
-        <div class="collection-hero__description rte">{{ collection.description }}</div>
-      {%- endif -%}
-    </div>
-
-    {%- if section.settings.show_collection_image and collection.image -%}
-      <div class="collection-hero__image-container media gradient">
-        <img
-          srcset="
-            {%- if collection.image.width >= 165 -%}{{ collection.image | image_url: width: 165 }} 165w,{%- endif -%}
-            {%- if collection.image.width >= 360 -%}{{ collection.image | image_url: width: 360 }} 360w,{%- endif -%}
-            {%- if collection.image.width >= 535 -%}{{ collection.image | image_url: width: 535 }} 535w,{%- endif -%}
-            {%- if collection.image.width >= 750 -%}{{ collection.image | image_url: width: 750 }} 750w,{%- endif -%}
-            {%- if collection.image.width >= 1070 -%}{{ collection.image | image_url: width: 1070 }} 1070w,{%- endif -%}
-            {%- if collection.image.width >= 1500 -%}{{ collection.image | image_url: width: 1500 }} 1500w,{%- endif -%}
-            {{ collection.image | image_url }} {{ collection.image.width }}w
-          "
-          src="{{ collection.image | image_url: width: 750 }}"
-          sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: 2 }}px, (min-width: 750px) calc(50vw - 130px), calc(50vw - 55px)"
-          alt="{{ collection.image.alt | escape }}"
-          width="{{ collection.image.width }}"
-          height="{{ collection.image.height }}"
-        >
+  <div
+    id="CollectionBanner-{{ section.id }}"
+    class="banner banner--{{ section.settings.cover_height }} banner--desktop-transparent banner--content-align-center banner--content-align-mobile-center color-{{ section.settings.color_scheme }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+  >
+    {%- if collection.image -%}
+      <div class="banner__media media">
+        {{
+          collection.image
+          | image_url: width: 3840
+          | image_tag:
+            sizes: '100vw',
+            widths: '750, 1100, 1500, 1780, 2000, 3000, 3840',
+            alt: collection.image.alt
+        }}
       </div>
     {%- endif -%}
+
+    <div class="banner__content banner__content--{{ section.settings.cover_content_position }} page-width">
+      <div class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme }} gradient">
+        <h1 class="banner__heading h0">
+          <span class="visually-hidden">{{ 'sections.collection_template.title' | t }}: </span>
+          {{- collection.title | escape -}}
+        </h1>
+
+        {%- if section.settings.show_collection_description -%}
+          <div class="banner__text rte">{{ collection.description }}</div>
+        {%- endif -%}
+      </div>
+    </div>
   </div>
-</div>
+{%- else -%}
+  {%- style -%}
+    @media screen and (max-width: 749px) {
+      .collection-hero--with-image .collection-hero__inner {
+        padding-bottom: calc({{ settings.media_shadow_vertical_offset | at_least: 0 }}px + 2rem);
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="collection-hero{% if section.settings.show_collection_image and collection.image %} collection-hero--with-image{% endif %} color-{{ section.settings.color_scheme }} gradient">
+    <div class="collection-hero__inner page-width {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
+      <div class="collection-hero__text-wrapper">
+        <h1 class="collection-hero__title">
+          <span class="visually-hidden">{{ 'sections.collection_template.title' | t }}: </span>
+          {{- collection.title | escape -}}
+        </h1>
+
+        {%- if section.settings.show_collection_description -%}
+          <div class="collection-hero__description rte">{{ collection.description }}</div>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.show_collection_image and collection.image -%}
+        <div class="collection-hero__image-container media gradient">
+          <img
+            srcset="
+              {%- if collection.image.width >= 165 -%}{{ collection.image | image_url: width: 165 }} 165w,{%- endif -%}
+              {%- if collection.image.width >= 360 -%}{{ collection.image | image_url: width: 360 }} 360w,{%- endif -%}
+              {%- if collection.image.width >= 535 -%}{{ collection.image | image_url: width: 535 }} 535w,{%- endif -%}
+              {%- if collection.image.width >= 750 -%}{{ collection.image | image_url: width: 750 }} 750w,{%- endif -%}
+              {%- if collection.image.width >= 1070 -%}{{ collection.image | image_url: width: 1070 }} 1070w,{%- endif -%}
+              {%- if collection.image.width >= 1500 -%}{{ collection.image | image_url: width: 1500 }} 1500w,{%- endif -%}
+              {{ collection.image | image_url }} {{ collection.image.width }}w
+            "
+            src="{{ collection.image | image_url: width: 750 }}"
+            sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: 2 }}px, (min-width: 750px) calc(50vw - 130px), calc(50vw - 55px)"
+            alt="{{ collection.image.alt | escape }}"
+            width="{{ collection.image.width }}"
+            height="{{ collection.image.height }}"
+          >
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{%- if section.blocks.size > 0 -%}
+  <div class="collection-hero__subcollections page-width">
+    <ul class="collection-hero__subcollections-list list-unstyled" role="list">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'related_collection' and block.settings.collection != blank -%}
+          <li {{ block.shopify_attributes }}>
+            <a href="{{ block.settings.collection.url }}" class="collection-hero__subcollection-pill link">
+              {{- block.settings.collection.title | escape -}}
+            </a>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endif -%}
 
 {% schema %}
 {
@@ -55,6 +113,16 @@
       "content": "t:sections.main-collection-banner.settings.paragraph.content"
     },
     {
+      "type": "select",
+      "id": "banner_style",
+      "options": [
+        { "value": "text", "label": "Text, with optional side image" },
+        { "value": "cover", "label": "Full-bleed cover image" }
+      ],
+      "default": "text",
+      "label": "Banner style"
+    },
+    {
       "type": "checkbox",
       "id": "show_collection_description",
       "default": true,
@@ -64,13 +132,67 @@
       "type": "checkbox",
       "id": "show_collection_image",
       "default": false,
-      "label": "t:sections.main-collection-banner.settings.show_collection_image.label"
+      "label": "t:sections.main-collection-banner.settings.show_collection_image.label",
+      "info": "Only used by the \"Text\" banner style."
+    },
+    {
+      "type": "header",
+      "content": "Cover style"
+    },
+    {
+      "type": "paragraph",
+      "content": "Uses the collection's image (set on the collection in Shopify admin) as the background."
+    },
+    {
+      "type": "select",
+      "id": "cover_height",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "small",
+      "label": "Cover height"
+    },
+    {
+      "type": "range",
+      "id": "cover_overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "default": 30,
+      "label": "Cover image overlay opacity"
+    },
+    {
+      "type": "select",
+      "id": "cover_content_position",
+      "options": [
+        { "value": "top-center", "label": "Top" },
+        { "value": "middle-center", "label": "Middle" },
+        { "value": "bottom-center", "label": "Bottom" }
+      ],
+      "default": "middle-center",
+      "label": "Cover content position"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
       "label": "t:sections.all.colors.label",
       "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "related_collection",
+      "name": "Related collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        }
+      ]
     }
   ]
 }

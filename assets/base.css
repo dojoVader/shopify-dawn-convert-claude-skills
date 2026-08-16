@@ -11,6 +11,7 @@ collection-component {
   --focused-base-outline: 0.2rem solid rgba(var(--color-foreground), 0.5);
   --focused-base-outline-offset: 0.3rem;
   --focused-base-box-shadow: 0 0 0 0.3rem rgb(var(--color-background)), 0 0 0.5rem 0.4rem rgba(var(--color-foreground), 0.3);
+  --slider-button-bg: white;
 }
 
 .product-card-wrapper .card,
@@ -161,14 +162,10 @@ body:has(.section-header .drawer-menu) .announcement-bar-section .page-width {
   flex-grow: 1;
 }
 
-.section + .section {
-  margin-top: var(--spacing-sections-mobile);
-}
+
 
 @media screen and (min-width: 750px) {
-  .section + .section {
-    margin-top: var(--spacing-sections-desktop);
-  }
+@
 }
 
 .element-margin-top {
@@ -2521,7 +2518,7 @@ input[type='checkbox'] {
 .header__icons {
   display: flex;
   grid-area: icons;
-  justify-self: end;
+  justify-self: anchor-center;
   padding-right: 0.8rem;
 }
 

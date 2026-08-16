@@ -1,75 +1,364 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
-    "image_banner": {
-      "type": "image-banner",
+    "hero": {
+      "type": "slideshow",
       "blocks": {
-        "heading": {
-          "type": "heading",
+        "slide_1": {
+          "type": "slide",
           "settings": {
-            "heading": "Browse our latest products",
-            "heading_size": "h0"
+            "image": "shopify://shop_images/two-nail-polishes-on-pink.jpg",
+            "image_overlay_opacity": 40,
+            "slogan": "Refill programme",
+            "heading": "Colour that keeps its composure.",
+            "heading_font": "playfair_display_n4",
+            "heading_size": "hxl",
+            "subheading": "Twelve hours of transfer-resistant pigment in a weightless velvet film. Refillable brass case, made in France.",
+            "button_label": "Shop the drop",
+            "link": "",
+            "button_style_secondary": false,
+            "show_text_box": false,
+            "box_align": "middle-center",
+            "text_alignment": "center",
+            "text_alignment_mobile": "center",
+            "color_scheme": "scheme-4"
           }
         },
-        "button": {
-          "type": "buttons",
+        "slide_2": {
+          "type": "slide",
           "settings": {
-            "button_label_1": "Shop all",
-            "button_link_1": "shopify://collections/all",
-            "button_style_secondary_1": true,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
+            "image": "shopify://shop_images/clothes-hangers-on-a-rail.jpg",
+            "image_overlay_opacity": 40,
+            "slogan": "Just dropped",
+            "heading": "The Nocturne Edit",
+            "heading_font": "playfair_display_n4",
+            "heading_size": "hxl",
+            "subheading": "Three finishes, one wardrobe. Matte, satin and high-shine pigment for autumn.",
+            "button_label": "Shop the collection",
+            "link": "",
+            "button_style_secondary": true,
+            "show_text_box": false,
+            "box_align": "middle-center",
+            "text_alignment": "center",
+            "text_alignment_mobile": "center",
+            "color_scheme": "scheme-4"
           }
         }
       },
       "block_order": [
-        "heading",
-        "button"
+        "slide_1",
+        "slide_2"
       ],
       "settings": {
-        "image_overlay_opacity": 40,
-        "image_height": "large",
-        "desktop_content_position": "bottom-center",
-        "show_text_box": false,
+        "layout": "full_bleed",
+        "slide_height": "large",
+        "slider_visual": "dots",
+        "auto_rotate": false,
+        "change_slides_speed": 5,
         "image_behavior": "none",
-        "desktop_content_alignment": "center",
-        "color_scheme": "scheme-3",
-        "mobile_content_alignment": "center",
-        "stack_images_on_mobile": false,
-        "show_text_below": false
+        "show_text_below": true,
+        "accessibility_info": "Slideshow about our brand"
       }
     },
-    "featured_collection": {
+    "trust_bar": {
+      "type": "multicolumn",
+      "blocks": {
+        "shipping": {
+          "type": "column",
+          "settings": {
+            "title": "Free shipping over $75",
+            "text": "",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "klarna": {
+          "type": "column",
+          "settings": {
+            "title": "4 payments with Klarna",
+            "text": "",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "cruelty_free": {
+          "type": "column",
+          "settings": {
+            "title": "Cruelty-free · Vegan formulas",
+            "text": "",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "returns": {
+          "type": "column",
+          "settings": {
+            "title": "60-day returns, no questions",
+            "text": "",
+            "link_label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "shipping",
+        "klarna",
+        "cruelty_free",
+        "returns"
+      ],
+      "settings": {
+        "title": "",
+        "heading_size": "h1",
+        "image_width": "full",
+        "image_ratio": "adapt",
+        "button_label": "",
+        "button_link": "",
+        "columns_desktop": 4,
+        "column_alignment": "center",
+        "background_style": "none",
+        "color_scheme": "scheme-2",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 20,
+        "padding_bottom": 0
+      }
+    },
+    "shop_by_category": {
+      "type": "collection-list",
+      "blocks": {
+        "cat_5": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "lips"
+          }
+        },
+        "cat_1": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "bath-amp-body"
+          }
+        },
+        "cat_2": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "face"
+          }
+        },
+        "cat_3": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "fragrance"
+          }
+        },
+        "cat_4": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "haircare"
+          }
+        }
+      },
+      "block_order": [
+        "cat_5",
+        "cat_1",
+        "cat_2",
+        "cat_3",
+        "cat_4"
+      ],
+      "settings": {
+        "eyebrow": "Collections",
+        "title": "Shop by category",
+        "heading_alignment": "center",
+        "heading_font": "playfair_display_n4",
+        "heading_color_scheme": "",
+        "heading_size": "h1",
+        "image_ratio": "square",
+        "columns_desktop": 5,
+        "color_scheme": "scheme-1",
+        "show_view_all": true,
+        "columns_mobile": "2",
+        "swipe_on_mobile": true,
+        "padding_top": 88,
+        "padding_bottom": 36
+      }
+    },
+    "best_sellers": {
       "type": "featured-collection",
       "settings": {
-        "title": "Featured products",
-        "heading_size": "h2",
+        "collection": "face",
+        "products_to_show": 4,
+        "title": "Best sellers",
+        "heading_size": "h1",
         "description": "",
         "show_description": false,
         "description_style": "body",
-        "collection": "all",
-        "products_to_show": 8,
         "columns_desktop": 4,
-        "color_scheme": "scheme-1",
+        "enable_desktop_slider": false,
         "full_width": false,
         "show_view_all": true,
-        "view_all_style": "solid",
-        "enable_desktop_slider": false,
-        "swipe_on_mobile": false,
-        "image_ratio": "adapt",
+        "view_all_style": "link",
+        "color_scheme": "scheme-1",
+        "image_ratio": "portrait",
         "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "quick_add": "none",
+        "show_secondary_image": false,
+        "show_vendor": true,
+        "show_rating": true,
+        "quick_add": "standard",
         "columns_mobile": "2",
-        "padding_top": 44,
+        "swipe_on_mobile": false,
+        "padding_top": 88,
         "padding_bottom": 36
+      }
+    },
+    "video_showcase": {
+      "type": "video",
+      "settings": {
+        "heading": "The making of Nocturne",
+        "heading_size": "h0",
+        "enable_video_looping": false,
+        "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+        "description": "Film · 2:14",
+        "full_width": true,
+        "color_scheme": "scheme-4",
+        "padding_top": 96,
+        "padding_bottom": 0
+      }
+    },
+    "shade_finder": {
+      "type": "interactive-quiz",
+      "blocks": {
+        "q_undertone": {
+          "type": "question",
+          "settings": {
+            "heading": "What's your undertone?",
+            "option_1": "Cool",
+            "option_2": "Warm",
+            "option_3": "Neutral",
+            "option_4": ""
+          }
+        },
+        "q_finish": {
+          "type": "question",
+          "settings": {
+            "heading": "Pick a finish",
+            "option_1": "Matte",
+            "option_2": "Satin",
+            "option_3": "High shine",
+            "option_4": ""
+          }
+        },
+        "q_occasion": {
+          "type": "question",
+          "settings": {
+            "heading": "What's the occasion?",
+            "option_1": "Everyday",
+            "option_2": "Evening",
+            "option_3": "Special event",
+            "option_4": ""
+          }
+        }
+      },
+      "block_order": [
+        "q_undertone",
+        "q_finish",
+        "q_occasion"
+      ],
+      "settings": {
+        "layout": "image_first",
+        "eyebrow": "Interactive",
+        "heading": "Find your shade in 30 seconds",
+        "heading_size": "h0",
+        "text": "<p>Three questions — undertone, finish, occasion — and we'll match you to the shade our clients with your profile keep re-ordering.</p>",
+        "button_label": "Start the shade finder",
+        "footnote": "92% of quiz takers keep their match.",
+        "result_product": "",
+        "result_heading": "Your match",
+        "result_description": "",
+        "result_button_label": "Shop this shade",
+        "color_scheme": "scheme-2",
+        "modal_color_scheme": "scheme-1",
+        "padding_top": 88,
+        "padding_bottom": 36
+      }
+    },
+    "social_gallery": {
+      "type": "social-gallery",
+      "blocks": {
+        "tile_1": {
+          "type": "image",
+          "settings": {
+            "link": "",
+            "alt": ""
+          }
+        },
+        "tile_2": {
+          "type": "image",
+          "settings": {
+            "link": "",
+            "alt": ""
+          }
+        },
+        "tile_3": {
+          "type": "image",
+          "settings": {
+            "link": "",
+            "alt": ""
+          }
+        },
+        "tile_4": {
+          "type": "image",
+          "settings": {
+            "link": "",
+            "alt": ""
+          }
+        },
+        "tile_5": {
+          "type": "image",
+          "settings": {
+            "link": "",
+            "alt": ""
+          }
+        },
+        "tile_6": {
+          "type": "image",
+          "settings": {
+            "link": "",
+            "alt": ""
+          }
+        }
+      },
+      "block_order": [
+        "tile_1",
+        "tile_2",
+        "tile_3",
+        "tile_4",
+        "tile_5",
+        "tile_6"
+      ],
+      "settings": {
+        "heading": "As worn by you",
+        "heading_size": "h1",
+        "columns_desktop": 6,
+        "color_scheme": "scheme-1",
+        "padding_top": 88,
+        "padding_bottom": 88
       }
     }
   },
   "order": [
-    "image_banner",
-    "featured_collection"
+    "hero",
+    "trust_bar",
+    "shop_by_category",
+    "best_sellers",
+    "video_showcase",
+    "shade_finder",
+    "social_gallery"
   ]
 }

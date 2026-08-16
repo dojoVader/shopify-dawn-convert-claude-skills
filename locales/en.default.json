@@ -29,6 +29,7 @@
       }
     },
     "continue_shopping": "Continue shopping",
+    "wishlist": "Wishlist",
     "pagination": {
       "label": "Pagination",
       "page": "Page {{ number }}",
@@ -107,6 +108,7 @@
   "products": {
     "product": {
       "add_to_cart": "Add to cart",
+      "quick_add": "Quick add",
       "choose_options": "Choose options",
       "choose_product_options": "Choose options for {{ product_name }}",
       "description": "Description",
@@ -247,7 +249,7 @@
       "pages": "Pages"
     },
     "cart": {
-      "cart": "Cart"
+      "cart": "Bag"
     },
     "contact": {
       "form": {
@@ -331,6 +333,10 @@
     },
     "collection_list": {
       "view_all": "View all"
+    },
+    "interactive_quiz": {
+      "question_label": "Question",
+      "of_label": "of"
     },
     "collection_template": {
       "empty": "No products found",

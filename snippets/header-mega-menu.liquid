@@ -30,12 +30,61 @@
                 class="mega-menu__content color-{{ section.settings.menu_color_scheme }} gradient motion-reduce global-settings-popup"
                 tabindex="-1"
               >
+                {%- liquid
+                  assign has_promo = false
+                  for block in section.blocks
+                    if block.type == 'mega_menu_promo' and block.settings.menu_handle == link.handle
+                      assign has_promo = true
+                    endif
+                  endfor
+
+                  assign total_columns = link.links.size
+                  if has_promo
+                    assign total_columns = total_columns | plus: 2
+                  endif
+                -%}
                 <ul
                   class="mega-menu__list page-width{% if link.levels == 1 %} mega-menu__list--condensed{% endif %}"
                   role="list"
+                  style="grid-template-columns: repeat({{ total_columns }}, minmax(0, 1fr));"
                 >
                   {%- for childlink in link.links -%}
+                    {%- liquid
+                      assign is_collection = false
+                      if childlink.type == 'collection_link' and childlink.object != blank
+                        assign is_collection = true
+                        assign linked_collection = childlink.object
+                      endif
+
+                      assign column_image = blank
+                      if is_collection and linked_collection.featured_image != blank
+                        assign column_image = linked_collection.featured_image
+                      elsif is_collection and linked_collection.products.first.featured_image != blank
+                        assign column_image = linked_collection.products.first.featured_image
+                      endif
+
+                      assign column_heading = childlink.title
+                      if is_collection
+                        assign column_heading = linked_collection.title
+                      endif
+                    -%}
                     <li>
+                      {%- if column_image != blank -%}
+                        <a
+                          href="{{ childlink.url }}"
+                          class="mega-menu__column-image-link"
+                          tabindex="-1"
+                          aria-hidden="true"
+                        >
+                          <span class="mega-menu__column-image media">
+                            {{
+                              column_image
+                              | image_url: width: 400
+                              | image_tag: widths: '165, 330, 400', sizes: '20vw', loading: 'lazy'
+                            }}
+                          </span>
+                        </a>
+                      {%- endif -%}
                       <a
                         id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}"
                         href="{{ childlink.url }}"
@@ -44,9 +93,30 @@
                           aria-current="page"
                         {% endif %}
                       >
-                        {{ childlink.title | escape }}
+                        {{ column_heading | escape }}
                       </a>
-                      {%- if childlink.links != blank -%}
+                      {%- if is_collection -%}
+                        <ul class="list-unstyled" role="list">
+                          {%- for product in linked_collection.products limit: 4 -%}
+                            <li>
+                              <a
+                                id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}-{{ product.handle }}"
+                                href="{{ product.url }}"
+                                class="mega-menu__link link"
+                              >
+                                {{ product.title | escape }}
+                              </a>
+                            </li>
+                          {%- endfor -%}
+                          {%- if linked_collection.products.size > 0 -%}
+                            <li>
+                              <a href="{{ childlink.url }}" class="mega-menu__link mega-menu__link--view-all link">
+                                {{- 'sections.collection_list.view_all' | t -}}
+                              </a>
+                            </li>
+                          {%- endif -%}
+                        </ul>
+                      {%- elsif childlink.links != blank -%}
                         <ul class="list-unstyled" role="list">
                           {%- for grandchildlink in childlink.links -%}
                             <li>
@@ -65,6 +135,29 @@
                         </ul>
                       {%- endif -%}
                     </li>
+                  {%- endfor -%}
+                  {%- for block in section.blocks -%}
+                    {%- if block.type == 'mega_menu_promo' and block.settings.menu_handle == link.handle -%}
+                      <li class="mega-menu__promo-item" {{ block.shopify_attributes }}>
+                        <a
+                          href="{{ block.settings.link | default: '#' }}"
+                          class="mega-menu__promo"
+                          {% if block.settings.image != blank %}
+                            style="background-image: url({{ block.settings.image | image_url: width: 800 }});"
+                          {% endif %}
+                        >
+                          {%- if block.settings.eyebrow != blank -%}
+                            <span class="mega-menu__promo-eyebrow">{{ block.settings.eyebrow | escape }}</span>
+                          {%- endif -%}
+                          {%- if block.settings.heading != blank -%}
+                            <span class="mega-menu__promo-heading">{{ block.settings.heading | escape }}</span>
+                          {%- endif -%}
+                          {%- if block.settings.link != blank and block.settings.link_label != blank -%}
+                            <span class="mega-menu__promo-link">{{ block.settings.link_label | escape }}</span>
+                          {%- endif -%}
+                        </a>
+                      </li>
+                    {%- endif -%}
                   {%- endfor -%}
                 </ul>
               </div>

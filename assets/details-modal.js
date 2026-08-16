@@ -6,7 +6,7 @@ class DetailsModal extends HTMLElement {
 
     this.detailsContainer.addEventListener('keyup', (event) => event.code.toUpperCase() === 'ESCAPE' && this.close());
     this.summaryToggle.addEventListener('click', this.onSummaryClick.bind(this));
-    this.querySelector('button[type="button"]').addEventListener('click', this.close.bind(this));
+    this.querySelector('.modal__close-button').addEventListener('click', this.close.bind(this));
 
     this.summaryToggle.setAttribute('role', 'button');
   }
@@ -30,10 +30,10 @@ class DetailsModal extends HTMLElement {
     document.body.addEventListener('click', this.onBodyClickEvent);
     document.body.classList.add('overflow-hidden');
 
-    trapFocus(
-      this.detailsContainer.querySelector('[tabindex="-1"]'),
-      this.detailsContainer.querySelector('input:not([type="hidden"])')
-    );
+    const container = this.detailsContainer.querySelector('[tabindex="-1"]');
+    const focusTarget = this.detailsContainer.querySelector('input:not([type="hidden"])') || container;
+
+    trapFocus(container, focusTarget);
   }
 
   close(focusToggle = true) {

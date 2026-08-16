@@ -19,6 +19,9 @@ Dawn's `announcement-bar.liquid` already renders a `<slideshow-component>` with 
 - Chevron glyphs (`&#8249;` / `&#8250;`) → Dawn already uses `icon-caret.svg` / slider button markup; only restyle (opacity, size), don't replace the icon system.
 - Each `{{ announce }}` message becomes one `announcement` block's `text` setting (merchant-editable), not hardcoded copy.
 
+## Capitalize Title
+Ensure all the text are capitalized. You can create a setting in the schema to allow merchants to choose whether they want the text to be capitalized or not. If you want to force it to be capitalized, you can use CSS `text-transform: uppercase;` on the announcement text.
+
 ## Notes
 - Preserve Dawn's accessible slider button markup (`aria-label`, `role="region"`) — the prototype's raw `onClick` handlers have no equivalent, they're already replaced by real anchor/button semantics in Dawn.
 - Follow `liquid-skills:liquid-theme-standards` for how to add scoped CSS instead of inline `style=""`.

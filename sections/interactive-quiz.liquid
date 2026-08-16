@@ -1,0 +1,345 @@
+{{ 'section-interactive-quiz.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'interactive-quiz.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="interactive-quiz interactive-quiz--{{ section.settings.layout }} page-width section-{{ section.id }}-padding">
+    <div class="interactive-quiz__media">
+      {%- for i in (1..4) -%}
+        {%- assign image_key = 'image_' | append: i -%}
+        {%- assign quiz_image = section.settings[image_key] -%}
+        {%- if quiz_image != blank -%}
+          {{
+            quiz_image
+            | image_url: width: 800
+            | image_tag: widths: '165, 360, 535, 750, 800', sizes: '(min-width: 750px) 25vw, 50vw', loading: 'lazy'
+          }}
+        {%- else -%}
+          {{ 'collection-apparel-' | append: i | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    <div class="interactive-quiz__text">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="interactive-quiz__eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="{{ section.settings.heading_size }} inline-richtext">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.text != blank -%}
+        <div class="rte">{{ section.settings.text }}</div>
+      {%- endif -%}
+
+      <details-modal>
+        <details>
+          <summary class="button modal__toggle" aria-haspopup="dialog">
+            {{- section.settings.button_label | default: 'Start the shade finder' -}}
+          </summary>
+          <div
+            class="quiz-modal modal__content color-{{ section.settings.modal_color_scheme }} gradient"
+            role="dialog"
+            aria-modal="true"
+            aria-label="{{ section.settings.heading | strip_html | escape }}"
+          >
+            <div class="modal-overlay"></div>
+            <div class="quiz-modal__content" tabindex="-1">
+              <quiz-flow>
+                {%- if section.blocks.size > 0 -%}
+                  <p class="quiz-flow__progress">
+                    {{- 'sections.interactive_quiz.question_label' | t -}}
+                    <span data-quiz-current>1</span>
+                    {{- 'sections.interactive_quiz.of_label' | t -}}
+                    {{- section.blocks.size -}}
+                  </p>
+                {%- endif -%}
+
+                {%- for block in section.blocks -%}
+                  <div
+                    class="quiz-flow__step"
+                    data-quiz-step
+                    {% unless forloop.first %}hidden{% endunless %}
+                    {{ block.shopify_attributes }}
+                  >
+                    <h3 class="quiz-flow__step-heading h3">{{ block.settings.heading | escape }}</h3>
+                    <div class="quiz-flow__options">
+                      {%- for i in (1..4) -%}
+                        {%- assign option_key = 'option_' | append: i -%}
+                        {%- assign option_label = block.settings[option_key] -%}
+                        {%- if option_label != blank -%}
+                          <button type="button" class="quiz-flow__option" data-quiz-option>
+                            {{- option_label | escape -}}
+                          </button>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </div>
+                  </div>
+                {%- endfor -%}
+
+                {%- if section.settings.result_product != blank -%}
+                  <div class="quiz-flow__result" data-quiz-result hidden>
+                    <div class="quiz-flow__result-media">
+                      {%- if section.settings.result_product.featured_image != blank -%}
+                        {{
+                          section.settings.result_product.featured_image
+                          | image_url: width: 300
+                          | image_tag: alt: section.settings.result_product.featured_image.alt
+                        }}
+                      {%- else -%}
+                        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                      {%- endif -%}
+                    </div>
+                    <div>
+                      {%- if section.settings.result_heading != blank -%}
+                        <span class="interactive-quiz__eyebrow">{{ section.settings.result_heading | escape }}</span>
+                      {%- endif -%}
+                      <h3 class="quiz-flow__result-title h3">{{ section.settings.result_product.title }}</h3>
+                      {%- if section.settings.result_description != blank -%}
+                        <div class="rte">{{ section.settings.result_description }}</div>
+                      {%- else -%}
+                        <div class="rte">{{ section.settings.result_product.description | strip_html | truncate: 140 }}</div>
+                      {%- endif -%}
+                      <a href="{{ section.settings.result_product.url }}" class="button quiz-flow__result-button">
+                        {{- section.settings.result_button_label | default: 'Shop this shade' -}}
+                      </a>
+                    </div>
+                  </div>
+                {%- endif -%}
+              </quiz-flow>
+
+              <button
+                type="button"
+                class="quiz-modal__close-button modal__close-button link link--text focus-inset"
+                aria-label="{{ 'accessibility.close' | t }}"
+              >
+                <span class="svg-wrapper">
+                  {{- 'icon-close.svg' | inline_asset_content -}}
+                </span>
+              </button>
+            </div>
+          </div>
+        </details>
+      </details-modal>
+
+      {%- if section.settings.footnote != blank -%}
+        <span class="interactive-quiz__footnote">{{ section.settings.footnote | escape }}</span>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.interactive-quiz.name",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        { "value": "image_first", "label": "t:sections.interactive-quiz.settings.layout.options__1.label" },
+        { "value": "text_first", "label": "t:sections.interactive-quiz.settings.layout.options__2.label" }
+      ],
+      "default": "image_first",
+      "label": "t:sections.interactive-quiz.settings.layout.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.interactive-quiz.settings.header_teaser.content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "default": "Interactive",
+      "label": "t:sections.interactive-quiz.settings.eyebrow.label"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "Find your shade in 30 seconds",
+      "label": "t:sections.interactive-quiz.settings.heading.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        { "value": "h2", "label": "t:sections.all.heading_size.options__1.label" },
+        { "value": "h1", "label": "t:sections.all.heading_size.options__2.label" },
+        { "value": "h0", "label": "t:sections.all.heading_size.options__3.label" },
+        { "value": "hxl", "label": "t:sections.all.heading_size.options__4.label" },
+        { "value": "hxxl", "label": "t:sections.all.heading_size.options__5.label" }
+      ],
+      "default": "h0",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "<p>Three questions and we'll match you to the shade our clients with your profile keep re-ordering.</p>",
+      "label": "t:sections.interactive-quiz.settings.text.label"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Start the shade finder",
+      "label": "t:sections.interactive-quiz.settings.button_label.label"
+    },
+    {
+      "type": "text",
+      "id": "footnote",
+      "label": "t:sections.interactive-quiz.settings.footnote.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "t:sections.interactive-quiz.settings.image.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "t:sections.interactive-quiz.settings.image.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "t:sections.interactive-quiz.settings.image.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_4",
+      "label": "t:sections.interactive-quiz.settings.image.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.interactive-quiz.settings.header_result.content"
+    },
+    {
+      "type": "product",
+      "id": "result_product",
+      "label": "t:sections.interactive-quiz.settings.result_product.label",
+      "info": "t:sections.interactive-quiz.settings.result_product.info"
+    },
+    {
+      "type": "text",
+      "id": "result_heading",
+      "default": "Your match",
+      "label": "t:sections.interactive-quiz.settings.result_heading.label"
+    },
+    {
+      "type": "richtext",
+      "id": "result_description",
+      "label": "t:sections.interactive-quiz.settings.result_description.label",
+      "info": "t:sections.interactive-quiz.settings.result_description.info"
+    },
+    {
+      "type": "text",
+      "id": "result_button_label",
+      "default": "Shop this shade",
+      "label": "t:sections.interactive-quiz.settings.result_button_label.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.interactive-quiz.settings.header_colors.content"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-2"
+    },
+    {
+      "type": "color_scheme",
+      "id": "modal_color_scheme",
+      "label": "t:sections.interactive-quiz.settings.modal_color_scheme.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 88
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "t:sections.interactive-quiz.blocks.question.name",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.interactive-quiz.blocks.question.settings.heading.label"
+        },
+        {
+          "type": "text",
+          "id": "option_1",
+          "label": "t:sections.interactive-quiz.blocks.question.settings.option.label"
+        },
+        {
+          "type": "text",
+          "id": "option_2",
+          "label": "t:sections.interactive-quiz.blocks.question.settings.option.label"
+        },
+        {
+          "type": "text",
+          "id": "option_3",
+          "label": "t:sections.interactive-quiz.blocks.question.settings.option.label"
+        },
+        {
+          "type": "text",
+          "id": "option_4",
+          "label": "t:sections.interactive-quiz.blocks.question.settings.option.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.interactive-quiz.presets.name",
+      "blocks": [
+        { "type": "question" },
+        { "type": "question" },
+        { "type": "question" }
+      ]
+    }
+  ]
+}
+{% endschema %}

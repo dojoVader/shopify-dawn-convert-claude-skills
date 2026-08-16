@@ -3396,6 +3396,111 @@
           "label": "Open by default"
         }
       }
+    },
+    "social-gallery": {
+      "name": "Social gallery",
+      "settings": {
+        "heading": {
+          "default": "As worn by you",
+          "label": "Heading"
+        },
+        "columns_desktop": {
+          "label": "Columns"
+        }
+      },
+      "blocks": {
+        "image": {
+          "name": "Image",
+          "settings": {
+            "image": {
+              "label": "Image"
+            },
+            "link": {
+              "label": "Link"
+            },
+            "alt": {
+              "label": "Alt text"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Social gallery"
+      }
+    },
+    "interactive-quiz": {
+      "name": "Interactive quiz",
+      "settings": {
+        "layout": {
+          "label": "Layout",
+          "options__1": {
+            "label": "Image first"
+          },
+          "options__2": {
+            "label": "Text first"
+          }
+        },
+        "header_teaser": {
+          "content": "Teaser"
+        },
+        "eyebrow": {
+          "label": "Eyebrow text"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "text": {
+          "label": "Text"
+        },
+        "button_label": {
+          "label": "Button label"
+        },
+        "footnote": {
+          "label": "Footnote"
+        },
+        "image": {
+          "label": "Image"
+        },
+        "header_result": {
+          "content": "Result"
+        },
+        "result_product": {
+          "label": "Result product",
+          "info": "The single product shown at the end of the quiz. This is a static match, not calculated from the answers."
+        },
+        "result_heading": {
+          "label": "Result eyebrow"
+        },
+        "result_description": {
+          "label": "Result description",
+          "info": "Leave blank to use the product's own description."
+        },
+        "result_button_label": {
+          "label": "Result button label"
+        },
+        "header_colors": {
+          "content": "Colors"
+        },
+        "modal_color_scheme": {
+          "label": "Modal color scheme"
+        }
+      },
+      "blocks": {
+        "question": {
+          "name": "Question",
+          "settings": {
+            "heading": {
+              "label": "Question"
+            },
+            "option": {
+              "label": "Option"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Interactive quiz"
+      }
     }
   }
 }

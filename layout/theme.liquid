@@ -69,6 +69,19 @@
       assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
       assign body_font_italic = settings.type_body_font | font_modify: 'style', 'italic'
       assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
+
+      assign body_font_100 = settings.type_body_font | font_modify: 'weight', 100
+      assign body_font_200 = settings.type_body_font | font_modify: 'weight', 200
+      assign body_font_300 = settings.type_body_font | font_modify: 'weight', 300
+      assign body_font_400 = settings.type_body_font | font_modify: 'weight', 400
+      assign body_font_500 = settings.type_body_font | font_modify: 'weight', 500
+
+      assign heading_font_100 = settings.type_header_font | font_modify: 'weight', 100
+      assign heading_font_200 = settings.type_header_font | font_modify: 'weight', 200
+      assign heading_font_300 = settings.type_header_font | font_modify: 'weight', 300
+      assign heading_font_400 = settings.type_header_font | font_modify: 'weight', 400
+      assign heading_font_500 = settings.type_header_font | font_modify: 'weight', 500
+      assign heading_font_600 = settings.type_header_font | font_modify: 'weight', 600
     %}
 
     {% style %}
@@ -77,6 +90,27 @@
       {{ body_font_italic | font_face: font_display: 'swap' }}
       {{ body_font_bold_italic | font_face: font_display: 'swap' }}
       {{ settings.type_header_font | font_face: font_display: 'swap' }}
+
+      {%- comment -%}
+        Extra weights (100-500) for both the body and heading font families,
+        so any CSS rule using an explicit font-weight in that range gets a
+        real font file instead of the browser faking it. font_modify falls
+        back to the closest weight the family actually publishes (e.g.
+        Playfair Display has nothing below 400), so some of these may
+        duplicate the base @font-face above rather than error.
+      {%- endcomment -%}
+      {{ body_font_100 | font_face: font_display: 'swap' }}
+      {{ body_font_200 | font_face: font_display: 'swap' }}
+      {{ body_font_300 | font_face: font_display: 'swap' }}
+      {{ body_font_400 | font_face: font_display: 'swap' }}
+      {{ body_font_500 | font_face: font_display: 'swap' }}
+
+      {{ heading_font_100 | font_face: font_display: 'swap' }}
+      {{ heading_font_200 | font_face: font_display: 'swap' }}
+      {{ heading_font_300 | font_face: font_display: 'swap' }}
+      {{ heading_font_400 | font_face: font_display: 'swap' }}
+      {{ heading_font_500 | font_face: font_display: 'swap' }}
+      {{ heading_font_600 | font_face: font_display: 'swap' }}
 
       {% for scheme in settings.color_schemes -%}
         {% assign scheme_classes = scheme_classes | append: ', .color-' | append: scheme.id %}
@@ -343,6 +377,8 @@
     </main>
 
     {% sections 'footer-group' %}
+
+    {{ 'lushies-overrides.css' | asset_url | stylesheet_tag }}
 
     <ul hidden>
       <li id="a11y-refresh-page-message">{{ 'accessibility.refresh_page' | t }}</li>

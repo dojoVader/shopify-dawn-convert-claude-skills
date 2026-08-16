@@ -12,7 +12,7 @@ description: Convert the Lushies static prototype's 5-column mega menu dropdown 
 
 ## Target
 `snippets/header-mega-menu.liquid` (already exists and implements the dropdown mechanics, keyboard nav, and `mega_menu` link-list detection — restyle/extend its column layout, don't reimplement hover/focus behavior).
-
+    
 ## What to convert
 - `onMouseEnter="{{ openMega }}"` / `onMouseLeave="{{ closeMega }}"` → Dawn already opens the mega menu via its `header-menu` custom element and `details`/`summary` or hover CSS in `header-mega-menu.liquid`; do not add JS event handlers, restyle the existing trigger.
 - The 4 link columns come from the menu's nested link list items (each top-level "Lips" menu item's child links) — map `sc-for list="{{ ... }}"` loops onto Dawn's existing `{% for child_link in link.links %}` pattern already in the snippet.

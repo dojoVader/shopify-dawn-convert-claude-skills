@@ -110,6 +110,14 @@
         #Slide-{{ section.id }}-{{ forloop.index }} .banner__media::after {
           opacity: {{ block.settings.image_overlay_opacity | divided_by: 100.0 }};
         }
+        {%- if block.settings.heading_font != blank -%}
+          {{ block.settings.heading_font | font_face: font_display: 'swap' }}
+          #Slide-{{ section.id }}-{{ forloop.index }} .banner__heading {
+            font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+            font-style: {{ block.settings.heading_font.style }};
+            font-weight: {{ block.settings.heading_font.weight }};
+          }
+        {%- endif -%}
       </style>
       <div
         class="slideshow__slide grid__item grid--1-col slider__slide"
@@ -160,6 +168,9 @@
         </div>
         <div class="slideshow__text-wrapper banner__content banner__content--{{ block.settings.box_align }} page-width{% if block.settings.show_text_box == false %} banner--desktop-transparent{% endif %}{% if settings.animations_reveal_on_scroll and forloop.index == 1 %} scroll-trigger animate--slide-in{% endif %}">
           <div class="slideshow__text banner__box content-container content-container--full-width-mobile color-{{ block.settings.color_scheme }} gradient slideshow__text--{{ block.settings.text_alignment }} slideshow__text-mobile--{{ block.settings.text_alignment_mobile }}">
+            {%- if block.settings.slogan != blank -%}
+              <p class="banner__slogan caption-with-letter-spacing">{{ block.settings.slogan | escape }}</p>
+            {%- endif -%}
             {%- if block.settings.heading != blank -%}
               <h2 class="banner__heading inline-richtext {{ block.settings.heading_size }}">
                 {{ block.settings.heading }}
@@ -410,10 +421,23 @@
           "content": "t:sections.slideshow.blocks.slide.settings.header_text.content"
         },
         {
+          "type": "text",
+          "id": "slogan",
+          "label": "Slogan",
+          "info": "Small uppercase line above the heading, e.g. \"Refill Programme\"."
+        },
+        {
           "type": "inline_richtext",
           "id": "heading",
           "default": "t:sections.slideshow.blocks.slide.settings.heading.default",
           "label": "t:sections.slideshow.blocks.slide.settings.heading.label"
+        },
+        {
+          "type": "font_picker",
+          "id": "heading_font",
+          "default": "playfair_display_n4",
+          "label": "Heading font",
+          "info": "Overrides the theme's heading font for this slide only."
         },
         {
           "type": "select",
